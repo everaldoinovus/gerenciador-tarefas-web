@@ -1,0 +1,501 @@
+// Arquivo: src/components/TaskForm.jsx
+
+import { useState } from 'react';
+
+function TaskForm() {
+  // Cria estados para cada campo do formulário
+  const [descricao, setDescricao] = useState('');
+  const [responsavel, setResponsavel] = useState('');
+  const [dataPrevista, setDataPrevista] = useState('');
+
+  const handleSubmit = (event) => {
+    // Impede o comportamento padrão do formulário (que é recarregar a página)
+    event.preventDefault();
+    
+    console.log({
+      descricao: descricao,
+      responsavel: responsavel,
+      data_prevista_conclusao: dataPrevista,
+    });
+
+    // Futuramente, aqui faremos a chamada para a API
+  };
+
+  return (
+    <form onSubmit={handleSubmit} className="task-form">
+      <h2>Adicionar Nova Tarefa</h2>
+      <div>
+        <label htmlFor="descricao">Descrição:</label>
+        <input
+          type="text"
+          id="descricao"
+          value={descricao}
+          onChange={(e) => setDescricao(e.target.value)}
+          required
+        />
+      </div>
+      <div>
+        <label htmlFor="responsavel">Responsável:</label>
+        <input
+          type="text"
+          id="responsavel"
+          value={responsavel}
+          onChange={(e) => setResponsavel(e.target.value)}
+          required
+        />
+      </div>
+      <div>
+        <label htmlFor="dataPrevista">Data Prevista de Conclusão:</label>
+        <input
+          type="date"
+          id="dataPrevista"
+          value={dataPrevista}
+          onChange={(e) => setDataPrevista(e.target.value)}
+          required
+        />
+      </div>
+      <button type="submit">Adicionar Tarefa</button>
+    </form>
+  );
+}
+
+export default TaskForm;
+
+
+.task-card {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #ffffff; /* Fundo branco para destacar no quadro */
+  border: 1px solid #eee;
+  padding: 15px;
+  margin-top: 10px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05); /* Uma leve sombra */
+}
+
+.delete-button {
+  padding: 5px 10px;
+  background-color: #dc3545;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.delete-button:hover {
+  background-color: #c82333;
+}
+
+.status-select {
+  margin-top: 10px;
+  padding: 5px;
+  border-radius: 4px;
+  border: 1px solid #ddd;
+  background-color: white;
+}
+
+/* Arquivo: src/App.css */
+.task-filter {
+  background-color: #f1f1f1;
+  padding: 15px;
+  margin-top: 20px;
+  margin-bottom: 20px;
+  border-radius: 8px;
+}
+.filter-controls {
+  display: flex;
+  gap: 15px;
+}
+.filter-controls input {
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+.kanban-board {
+  display: flex;
+  gap: 20px;
+  margin-top: 20px;
+  padding: 10px;
+  overflow-x: auto; /* Permite rolagem horizontal se não couber */
+}
+
+.kanban-column {
+  flex: 1;
+  min-width: 300px; /* Largura mínima de cada coluna */
+  background-color: #f1f1f1;
+  border-radius: 8px;
+  padding: 15px;
+}
+
+.kanban-column h3 {
+  text-align: center;
+  margin-top: 0;
+  padding-bottom: 10px;
+  border-bottom: 2px solid #ccc;
+}
+
+.view-switcher {
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+.view-switcher button {
+  padding: 10px 15px;
+  border: 1px solid #ccc;
+  background-color: white;
+  cursor: pointer;
+}
+.view-switcher button.active {
+  background-color: #007bff;
+  color: white;
+  border-color: #007bff;
+}
+.view-switcher button:first-child {
+  border-top-left-radius: 5px;
+  border-bottom-left-radius: 5px;
+}
+.view-switcher button:last-child {
+  border-top-right-radius: 5px;
+  border-bottom-right-radius: 5px;
+}
+
+.sector-group {
+  margin-top: 40px; /* Espaçamento entre os diferentes setores */
+  padding: 20px;
+  background-color: #f8f9fa; /* Um cinza bem claro para o fundo do bloco */
+  border-radius: 8px;
+  border: 1px solid #dee2e6; /* Uma borda sutil */
+}
+
+.sector-group h2 {
+  font-size: 1.5rem; /* Tamanho da fonte para o título do setor */
+  margin-top: 0;
+  padding-bottom: 15px;
+  border-bottom: 2px solid #007bff; /* Linha azul abaixo do título */
+  color: #343a40; /* Cor escura para o texto do título */
+}
+
+/* Garante que o primeiro grupo de setor não tenha uma margem extra no topo */
+.sectors-container > .sector-group:first-child {
+  margin-top: 20px;
+}
+
+.sector-form {
+  display: flex;
+  margin-bottom: 20px;
+}
+.sector-form input {
+  flex-grow: 1;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px 0 0 4px;
+}
+.sector-form button {
+  padding: 8px 15px;
+  border: 1px solid #28a745;
+  background-color: #28a745;
+  color: white;
+  border-radius: 0 4px 4px 0;
+  cursor: pointer;
+}
+
+.sector-list {
+  list-style: none;
+  padding: 0;
+  max-height: 200px;
+  overflow-y: auto;
+}
+.sector-list li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px;
+  border-bottom: 1px solid #eee;
+}
+.delete-sector-btn {
+  background: none;
+  border: none;
+  color: #dc3545;
+  font-size: 1.5rem;
+  font-weight: bold;
+  cursor: pointer;
+  padding: 0 5px;
+}
+.close-modal-btn {
+  display: block;
+  width: 100%;
+  margin-top: 20px;
+  padding: 10px;
+  background-color: #6c757d;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.main-controls {
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+.manage-sectors-btn {
+  padding: 10px 20px;
+  background-color: #17a2b8;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  font-size: 1rem;
+  cursor: pointer;
+}
+.manage-sectors-btn:hover {
+  background-color: #138496;
+}
+
+.sector-header {
+  display: flex;
+  align-items: center;
+  gap: 15px; 
+  padding-bottom: 15px;
+  border-bottom: 2px solid #007bff;
+  margin-bottom: 15px;
+}
+
+.sector-header h2 {
+  margin: 0;
+  padding: 0;
+  border: none;
+}
+
+.add-task-btn {
+  padding: 5px 12px;
+  font-size: 0.9rem;
+  background-color: #28a745;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.add-task-btn:hover {
+  background-color: #218838;
+}
+
+.task-modal-view-mode h2, .modal-title-input {
+  font-size: 1.8rem;
+  color: #333;
+  margin-top: 0;
+  margin-bottom: 20px;
+}
+.modal-title-input {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.details-grid, .form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 15px 20px;
+  margin-bottom: 20px;
+}
+.form-grid {
+  grid-template-columns: auto 1fr; /* Coluna de label auto, input ocupa o resto */
+  align-items: center;
+}
+.form-grid label {
+  font-weight: bold;
+}
+.form-grid input, .form-grid select {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.task-modal-view-mode h3, .task-modal-edit-mode h3 {
+  border-top: 1px solid #eee;
+  padding-top: 20px;
+  margin-top: 20px;
+  margin-bottom: 10px;
+}
+
+.notes-display {
+  background-color: #f9f9f9;
+  padding: 15px;
+  border-radius: 4px;
+  min-height: 100px;
+  white-space: pre-wrap; /* Preserva quebras de linha e espaços */
+}
+.modal-notes-textarea {
+  width: 100%;
+  min-height: 150px;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  resize: vertical;
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 25px;
+  border-top: 1px solid #eee;
+  padding-top: 20px;
+}
+
+.modal-actions button {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
+}
+.edit-btn { background-color: #007bff; }
+.save-btn { background-color: #28a745; }
+.cancel-btn, .close-btn { background-color: #6c757d; }
+.delete-btn-modal { background-color: #dc3545; }
+
+      
+.task-card.clickable {
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.task-card.clickable:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+/* ================================== */
+/* ESTILOS PARA O INDICADOR DE CARGA  */
+/* ================================== */
+
+.loading-overlay {
+  position: fixed; /* Cobre a tela inteira */
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(255, 255, 255, 0.7); /* Fundo branco semi-transparente */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 2000; /* Garante que fique sobre todos os outros elementos */
+  
+  .toast-confirm-btn, .toast-cancel-btn {
+  padding: 5px 10px;
+  margin: 5px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  cursor: pointer;
+}
+.toast-confirm-btn { background-color: #dc3545; color: white; border-color: #dc3545; }
+.toast-cancel-btn { background-color: #f1f1f1; }
+}
+
+/* ================================== */
+/* ESTILOS PARA ESTADOS VAZIOS        */
+/* ================================== */
+
+.empty-state-message {
+  padding: 20px;
+  text-align: center;
+  color: #6c757d; /* Cinza para não chamar muita atenção */
+  background-color: rgba(0,0,0,0.02);
+  border-radius: 4px;
+  margin: 10px 0;
+}
+
+/* ================================== */
+/* ESTILOS PARA PÁGINAS DE AUTH       */
+/* ================================== */
+
+.auth-page {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background-color: #f0f2f5;
+}
+
+.auth-form-container {
+  padding: 40px;
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  width: 100%;
+  max-width: 400px;
+}
+
+.auth-form-container h2 {
+  text-align: center;
+  margin-top: 0;
+  margin-bottom: 30px;
+  color: #333;
+}
+
+.form-group {
+  margin-bottom: 20px;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: bold;
+}
+
+.form-group input {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.auth-button {
+  width: 100%;
+  padding: 12px;
+  border: none;
+  border-radius: 4px;
+  background-color: #007bff;
+  color: white;
+  font-size: 1rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.auth-button:hover {
+  background-color: #0056b3;
+}
+
+.auth-switch-link {
+  margin-top: 20px;
+  text-align: center;
+}
+
+.auth-switch-link a {
+  color: #007bff;
+  font-weight: bold;
+  text-decoration: none;
+}
+
+.main-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+.main-header h1 {
+  margin: 0;
+}
+.logout-btn {
+  padding: 8px 15px;
+  background-color: #6c757d;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
