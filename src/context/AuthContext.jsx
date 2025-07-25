@@ -22,7 +22,7 @@ export const AuthProvider = ({ children }) => {
   const login = async (email, senha) => {
     setLoading(true);
     try {
-      const response = await axios.post('http://localhost:3333/auth/login', { email, senha });
+      const response = await axios.post('/auth/login', { email, senha });
       const { token: newToken } = response.data;
       localStorage.setItem('token', newToken);
       setToken(newToken);
@@ -48,7 +48,7 @@ export const AuthProvider = ({ children }) => {
   const register = async (email, senha) => {
     setLoading(true);
     try {
-      await axios.post('http://localhost:3333/auth/register', { email, senha });
+      await axios.post('/auth/register', { email, senha });
       toast.success('Registro realizado com sucesso! Verifique seu e-mail para o código de ativação.');
     } catch (error) {
       console.error('Erro de registro:', error);
