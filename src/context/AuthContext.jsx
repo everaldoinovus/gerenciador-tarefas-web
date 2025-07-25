@@ -2,10 +2,8 @@ import React, { createContext, useState, useEffect, useContext } from 'react';
 import axios from 'axios';
 import { toast } from 'react-toastify';
 
-// Cria o Contexto
 const AuthContext = createContext(null);
 
-// Cria o Provedor do Contexto
 export const AuthProvider = ({ children }) => {
   const [token, setToken] = useState(localStorage.getItem('token'));
   const [loading, setLoading] = useState(false);
@@ -18,10 +16,10 @@ export const AuthProvider = ({ children }) => {
     }
   }, [token]);
 
-  // Função de Login
   const login = async (email, senha) => {
     setLoading(true);
     try {
+      // CORREÇÃO: Usando caminho relativo
       const response = await axios.post('/auth/login', { email, senha });
       const { token: newToken } = response.data;
       localStorage.setItem('token', newToken);
@@ -29,14 +27,10 @@ export const AuthProvider = ({ children }) => {
       toast.success('Login bem-sucedido!');
     } catch (error) {
       console.error('Erro de login:', error);
-      
-      // Se a API retornar a flag 'needsVerification', nós a passamos para frente
       if (error.response?.data?.needsVerification) {
         toast.warn('Sua conta não foi verificada. Por favor, verifique seu e-mail.');
-        // Lançamos um erro especial para que a LoginPage possa capturá-lo
         throw { ...error, needsVerification: true }; 
       }
-
       toast.error(error.response?.data?.error || 'Falha no login. Verifique suas credenciais.');
       throw error;
     } finally {
@@ -44,10 +38,10 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  // Função de Registro
   const register = async (email, senha) => {
     setLoading(true);
     try {
+      // CORREÇÃO: Usando caminho relativo
       await axios.post('/auth/register', { email, senha });
       toast.success('Registro realizado com sucesso! Verifique seu e-mail para o código de ativação.');
     } catch (error) {
@@ -59,7 +53,6 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  // Função de Logout
   const logout = () => {
     localStorage.removeItem('token');
     setToken(null);
@@ -82,7 +75,6 @@ export const AuthProvider = ({ children }) => {
   );
 };
 
-// Hook customizado para facilitar o uso do contexto
 export const useAuth = () => {
   const context = useContext(AuthContext);
   if (!context) {
