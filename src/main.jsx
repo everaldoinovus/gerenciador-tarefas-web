@@ -4,9 +4,12 @@ import App from './App.jsx';
 import './index.css';
 import axios from 'axios';
 
-// Define a URL base para todas as requisições do axios
-// Ele vai ler a VITE_API_BASE_URL do arquivo .env
-axios.defaults.baseURL = import.meta.env.VITE_API_BASE_URL;
+// Vamos ser explícitos sobre a URL de fallback
+const apiUrl = import.meta.env.VITE_API_BASE_URL || 'http://localhost:3333';
+axios.defaults.baseURL = apiUrl;
+
+// Para depuração, vamos logar a URL que está sendo usada
+console.log(`A API está configurada para: ${apiUrl}`);
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
