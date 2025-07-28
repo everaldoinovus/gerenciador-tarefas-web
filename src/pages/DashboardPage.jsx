@@ -8,6 +8,7 @@ import SectorManager from '../components/SectorManager';
 import TaskModal from '../components/TaskModal';
 import TaskDetailModal from '../components/TaskDetailModal';
 import MemberManagerModal from '../components/MemberManagerModal';
+import InvitationsBell from '../components/InvitationsBell';
 import TaskFilter from '../components/TaskFilter';
 import BoardView from '../components/BoardView';
 import TaskCard from '../components/TaskCard';
@@ -37,6 +38,7 @@ function DashboardPage() {
     const handleUpdateTaskStatus = (taskId, newStatus) => { handleUpdateTask(taskId, { status: newStatus }); };
     const handleDeleteTask = async (taskId) => { /* ... */ };
     const handleSectorsUpdate = (type, sectorName) => { fetchSectors(); if(type === 'add') { toast.success(`Setor "${sectorName}" adicionado!`); } if(type === 'delete') { toast.success(`Setor deletado com sucesso!`); } };
+    const handleAcceptInvitation = () => { fetchSectors(); };
 
     const handleFilterChange = (filterName, value) => { setFilters(prevFilters => ({ ...prevFilters, [filterName]: value })); };
     const openTaskModal = (sector) => { setSelectedSector(sector); setIsTaskModalOpen(true); };
@@ -50,7 +52,13 @@ function DashboardPage() {
     return (
         <div className="container">
             {isLoading && (<div className="loading-overlay"><ClipLoader color={"#007bff"} size={80} /></div>)}
-            <header className="main-header"><h1>Meu Gerenciador de Tarefas</h1><button onClick={logout} className="logout-btn">Sair</button></header>
+            <header className="main-header">
+                <h1>Meu Gerenciador de Tarefas</h1>
+                <div className="header-controls">
+                  <InvitationsBell onAcceptInvitation={handleAcceptInvitation} />
+                  <button onClick={logout} className="logout-btn">Sair</button>
+                </div>
+            </header>
             <div className="main-controls"><button onClick={() => setIsSectorModalOpen(true)} className="manage-sectors-btn">Gerenciar Setores</button></div>
             <TaskFilter onFilterChange={handleFilterChange} />
             <div className="view-switcher"><button onClick={() => setViewMode('list')} className={viewMode === 'list' ? 'active' : ''}>Lista</button><button onClick={() => setViewMode('board')} className={viewMode === 'board' ? 'active' : ''}>Quadro</button></div>

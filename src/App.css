@@ -576,3 +576,92 @@ export default TaskForm;
 .settings-btn:hover {
   opacity: 1;
 }
+
+/* ================================== */
+/* ESTILOS PARA NOTIFICAÇÃO DE CONVITE*/
+/* ================================== */
+
+.invitations-bell-container {
+  position: relative;
+  margin-left: 20px;
+}
+
+.bell-button {
+  background: none;
+  border: none;
+  font-size: 1.8rem;
+  cursor: pointer;
+  position: relative;
+}
+
+.invitation-count {
+  position: absolute;
+  top: -5px;
+  right: -5px;
+  background-color: #dc3545;
+  color: white;
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  font-size: 0.8rem;
+  font-weight: bold;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.invitations-dropdown {
+  position: absolute;
+  top: 120%;
+  right: 0;
+  width: 300px;
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  border: 1px solid #eee;
+  z-index: 100;
+}
+
+.dropdown-header {
+  padding: 10px 15px;
+  font-weight: bold;
+  border-bottom: 1px solid #eee;
+}
+
+.invitations-dropdown ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+.invitations-dropdown li {
+  padding: 15px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #f1f1f1;
+}
+
+.invitations-dropdown li:last-child {
+  border-bottom: none;
+}
+
+.accept-btn {
+  padding: 5px 10px;
+  border: none;
+  background-color: #28a745;
+  color: white;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.8rem;
+}
+      
+.header-controls {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+    
