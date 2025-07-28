@@ -1,37 +1,48 @@
-import { useState } from 'react';
+// Arquivo: gerenciador-tarefas-web/src/components/TaskForm.jsx
 
-// O formulário agora é simples. Ele apenas recebe uma função 'onSubmit'.
-function TaskForm({ onSubmit }) {
+import React, { useState } from 'react';
+
+// Recebe a lista de 'members' via props
+function TaskForm({ onSubmit, members = [] }) {
   const [descricao, setDescricao] = useState('');
-  const [responsavel, setResponsavel] = useState('');
+  const [responsavelId, setResponsavelId] = useState(''); // Agora guarda o ID
   const [dataPrevista, setDataPrevista] = useState('');
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    if (!descricao || !responsavel || !dataPrevista) {
-      alert("Por favor, preencha todos os campos.");
+    if (!descricao || !dataPrevista) {
+      alert("Por favor, preencha a descrição e a data.");
       return;
     }
-
-    // Chama a função que recebeu via props, passando os dados do formulário.
     onSubmit({
       descricao,
-      responsavel,
+      responsavel_id: responsavelId || null, // Envia o ID ou null se "Ninguém" for selecionado
       data_prevista_conclusao: dataPrevista,
     });
   };
 
   return (
-    // Removemos o título, pois ele ficará no modal.
     <form onSubmit={handleSubmit} className="task-form">
       <div>
         <label htmlFor="descricao">Descrição:</label>
         <input type="text" id="descricao" value={descricao} onChange={(e) => setDescricao(e.target.value)} required />
       </div>
       
+      {/* MUDANÇA PRINCIPAL: Input de texto vira um select */}
       <div>
-        <label htmlFor="responsavel">Responsável:</label>
-        <input type="text" id="responsavel" value={responsavel} onChange={(e) => setResponsavel(e.target.value)} required />
+        <label htmlFor="responsavel_id">Responsável:</label>
+        <select
+          id="responsavel_id"
+          value={responsavelId}
+          onChange={(e) => setResponsavelId(e.target.value)}
+        >
+          <option value="">-- Ninguém --</option>
+          {members.map(member => (
+            <option key={member.id} value={member.id}>
+              {member.email}
+            </option>
+          ))}
+        </select>
       </div>
       
       <div>
