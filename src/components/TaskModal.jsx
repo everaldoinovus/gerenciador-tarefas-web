@@ -28,19 +28,11 @@ function TaskModal({ isOpen, onRequestClose, onTaskAdd, sector }) {
   
   // Esta função é passada para o TaskForm.
   // Ela recebe os dados do formulário e adiciona o 'setor_id' antes de continuar.
-  const handleFormSubmit = (formData) => {
-  // Ponto de depuração 1
-  alert("handleFormSubmit no TaskModal foi chamado!"); 
-
+const handleFormSubmit = (formData) => {
   const completeTaskData = {
     ...formData,
     setor_id: sector.id
   };
-
-  // Ponto de depuração 2
-  console.log("Dados da tarefa a serem enviados:", completeTaskData);
-  alert("Dados montados. Prestes a chamar onTaskAdd.");
-
   onTaskAdd(completeTaskData);
   onRequestClose();
 };

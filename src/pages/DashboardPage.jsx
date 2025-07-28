@@ -1,3 +1,5 @@
+// Arquivo: gerenciador-tarefas-web/src/pages/DashboardPage.jsx
+
 import React, { useState, useEffect } from 'react';
 import { ClipLoader } from 'react-spinners';
 import { toast } from 'react-toastify';
@@ -28,17 +30,89 @@ function DashboardPage() {
     const [selectedSector, setSelectedSector] = useState(null);
     const [sectorForMembers, setSectorForMembers] = useState(null);
 
-    const fetchTasks = async () => { setIsLoading(true); try { const response = await api.get('/tarefas', { params: filters }); setTasks(response.data); } catch (error) { console.error("Erro ao buscar tarefas:", error); if (error.response?.status !== 401) toast.error("Falha ao carregar tarefas."); } finally { setIsLoading(false); } };
-    const fetchSectors = async () => { try { const response = await api.get('/setores'); setSectors(response.data); } catch (error) { console.error("Erro ao buscar setores:", error); } };
-    useEffect(() => { fetchTasks(); }, [filters]);
-    useEffect(() => { fetchSectors(); }, []);
+    const fetchTasks = async () => {
+        setIsLoading(true);
+        try {
+            const response = await api.get('/tarefas', { params: filters });
+            setTasks(response.data);
+        } catch (error) {
+            console.error("Erro ao buscar tarefas:", error);
+            if (error.response?.status !== 401) toast.error("Falha ao carregar tarefas.");
+        } finally {
+            setIsLoading(false);
+        }
+    };
 
-    const handleAddTask = async (taskData) => { /* ... */ };
-    const handleUpdateTask = async (taskId, updatedData) => { /* ... */ };
-    const handleUpdateTaskStatus = (taskId, newStatus) => { handleUpdateTask(taskId, { status: newStatus }); };
-    const handleDeleteTask = async (taskId) => { /* ... */ };
-    const handleSectorsUpdate = (type, sectorName) => { fetchSectors(); if(type === 'add') { toast.success(`Setor "${sectorName}" adicionado!`); } if(type === 'delete') { toast.success(`Setor deletado com sucesso!`); } };
-    const handleAcceptInvitation = () => { fetchSectors(); };
+    const fetchSectors = async () => {
+        try {
+            const response = await api.get('/setores');
+            setSectors(response.data);
+        } catch (error) {
+            console.error("Erro ao buscar setores:", error);
+        }
+    };
+
+    useEffect(() => {
+        fetchTasks();
+    }, [filters]);
+
+    useEffect(() => {
+        fetchSectors();
+    }, []);
+
+    // ===== FUNÇÕES RESTAURADAS =====
+    const handleAddTask = async (taskData) => {
+        try {
+            await api.post('/tarefas', taskData);
+            toast.success("Tarefa adicionada com sucesso!");
+            fetchTasks(); // Recarrega a lista de tarefas
+        } catch (error) {
+            toast.error(error.response?.data?.error || "Erro ao adicionar tarefa.");
+        }
+    };
+
+    const handleUpdateTask = async (taskId, updatedData) => {
+        try {
+            const originalTask = tasks.find(task => task.id === taskId);
+            if (!originalTask) return;
+            const finalData = { ...originalTask, ...updatedData };
+            await api.put(`/tarefas/${taskId}`, finalData);
+            if (updatedData.status === originalTask.status || !updatedData.status) {
+                toast.success("Tarefa atualizada com sucesso!");
+            }
+            setTasks(tasks.map(task => task.id === taskId ? finalData : task));
+            if (selectedTask && selectedTask.id === taskId) {
+                setSelectedTask(finalData);
+            }
+        } catch (error) {
+            toast.error(error.response?.data?.error || "Erro ao atualizar tarefa.");
+        }
+    };
+    
+    const handleDeleteTask = async (taskId) => {
+        try {
+            await api.delete(`/tarefas/${taskId}`);
+            toast.success("Tarefa deletada com sucesso!");
+            fetchTasks();
+        } catch (error) {
+            toast.error(error.response?.data?.error || "Erro ao deletar tarefa.");
+        }
+    };
+    // ==================================
+
+    const handleUpdateTaskStatus = (taskId, newStatus) => {
+        handleUpdateTask(taskId, { status: newStatus });
+    };
+
+    const handleSectorsUpdate = (type, sectorName) => {
+        fetchSectors();
+        if(type === 'add') { toast.success(`Setor "${sectorName}" adicionado!`); }
+        if(type === 'delete') { toast.success(`Setor deletado com sucesso!`); }
+    };
+
+    const handleAcceptInvitation = () => {
+        fetchSectors();
+    };
 
     const handleFilterChange = (filterName, value) => { setFilters(prevFilters => ({ ...prevFilters, [filterName]: value })); };
     const openTaskModal = (sector) => { setSelectedSector(sector); setIsTaskModalOpen(true); };
