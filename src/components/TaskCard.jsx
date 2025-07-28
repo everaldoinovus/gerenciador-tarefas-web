@@ -3,37 +3,50 @@
 import React from 'react';
 import { Draggable } from '@hello-pangea/dnd';
 
-// Recebe uma nova prop: 'isDragDisabled'
 function TaskCard({ task, index, onCardClick, onUpdateStatus, isDragDisabled = false }) {
   
-  const formatDate = (dateString) => { /* ... */ };
-  const handleSelectClick = (e) => { e.stopPropagation(); };
+  // Função para formatar a data, garantindo que a hora não afete o dia
+  const formatDate = (dateString) => {
+    if (!dateString) return 'N/A';
+    const date = new Date(dateString);
+    const userTimezoneOffset = date.getTimezoneOffset() * 60000;
+    return new Date(date.getTime() + userTimezoneOffset).toLocaleDateString('pt-BR');
+  };
+  
+  // Impede que o clique no select propague para o card e abra o modal
+  const handleSelectClick = (e) => {
+    e.stopPropagation();
+  };
 
-  // O conteúdo do card agora é um componente separado para reutilização
-  const CardContent = (
-    <div className="task-info">
-      <strong>{task.descricao}</strong>
-      <p>Responsável: {task.responsavel}</p>
-      {/* ... (o resto do conteúdo do card) ... */}
-    </div>
-    // ... (select de status) ...
+  // O conteúdo interno do card, para ser reutilizado
+  const CardInnerContent = () => (
+    <>
+      <div className="task-info">
+        <strong>{task.descricao}</strong>
+        <p>Responsável: {task.responsavel_email || 'Ninguém'}</p>
+        <p>Data de Conclusão: {formatDate(task.data_prevista_conclusao)}</p>
+      </div>
+      <select 
+        value={task.status} 
+        onChange={(e) => { 
+          e.stopPropagation(); // Impede o clique de abrir o modal
+          onUpdateStatus(task.id, e.target.value);
+        }}
+        onClick={handleSelectClick}
+        className="status-select"
+      >
+        <option value="Pendente">Pendente</option>
+        <option value="Em Andamento">Em Andamento</option>
+        <option value="Concluída">Concluída</option>
+      </select>
+    </>
   );
 
   // Se o drag and drop estiver desabilitado (modo lista), renderiza um 'li' simples
   if (isDragDisabled) {
     return (
       <li className="task-card clickable" onClick={() => onCardClick(task)}>
-        {/* Código do conteúdo do card duplicado para clareza, poderia ser um componente */}
-        <div className="task-info">
-            <strong>{task.descricao}</strong>
-            <p>Responsável: {task.responsavel}</p>
-            <p>Data de Conclusão: {formatDate(task.data_prevista_conclusao)}</p>
-        </div>
-        <select value={task.status} onChange={(e) => { e.stopPropagation(); onUpdateStatus(task.id, e.target.value); }} onClick={handleSelectClick} className="status-select">
-            <option value="Pendente">Pendente</option>
-            <option value="Em Andamento">Em Andamento</option>
-            <option value="Concluída">Concluída</option>
-        </select>
+        <CardInnerContent />
       </li>
     );
   }
@@ -49,17 +62,7 @@ function TaskCard({ task, index, onCardClick, onUpdateStatus, isDragDisabled = f
           className={`task-card clickable ${snapshot.isDragging ? 'is-dragging' : ''}`}
           onClick={() => onCardClick(task)}
         >
-          {/* O mesmo conteúdo do card */}
-          <div className="task-info">
-            <strong>{task.descricao}</strong>
-            <p>Responsável: {task.responsavel}</p>
-            <p>Data de Conclusão: {formatDate(task.data_prevista_conclusao)}</p>
-          </div>
-          <select value={task.status} onChange={(e) => { e.stopPropagation(); onUpdateStatus(task.id, e.target.value); }} onClick={handleSelectClick} className="status-select">
-            <option value="Pendente">Pendente</option>
-            <option value="Em Andamento">Em Andamento</option>
-            <option value="Concluída">Concluída</option>
-          </select>
+          <CardInnerContent />
         </li>
       )}
     </Draggable>
