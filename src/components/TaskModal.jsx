@@ -29,23 +29,21 @@ function TaskModal({ isOpen, onRequestClose, onTaskAdd, sector }) {
   // Esta função é passada para o TaskForm.
   // Ela recebe os dados do formulário e adiciona o 'setor_id' antes de continuar.
   const handleFormSubmit = (formData) => {
-    // Se por algum motivo o setor não existir, não faz nada.
-    if (!sector || !sector.id) {
-        alert("Erro: Setor não selecionado.");
-        return;
-    }
-      
-    const completeTaskData = {
-      ...formData,
-      setor_id: sector.id // Adiciona o ID do setor que foi passado para o modal
-    };
-    
-    // Chama a função final que veio do App.jsx
-    onTaskAdd(completeTaskData);
-    
-    // Fecha o modal após a submissão
-    onRequestClose();
+  // Ponto de depuração 1
+  alert("handleFormSubmit no TaskModal foi chamado!"); 
+
+  const completeTaskData = {
+    ...formData,
+    setor_id: sector.id
   };
+
+  // Ponto de depuração 2
+  console.log("Dados da tarefa a serem enviados:", completeTaskData);
+  alert("Dados montados. Prestes a chamar onTaskAdd.");
+
+  onTaskAdd(completeTaskData);
+  onRequestClose();
+};
   
   // Se o setor não foi carregado ainda, não renderiza nada para evitar erros.
   if (!sector) return null;
