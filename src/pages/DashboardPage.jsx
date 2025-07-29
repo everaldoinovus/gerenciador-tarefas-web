@@ -19,7 +19,7 @@ function DashboardPage() {
     const [sectors, setSectors] = useState([]);
     const [filters, setFilters] = useState({ responsavel: '', data: '' });
     const [viewMode, setViewMode] = useState('board');
-    const [isLoading, setIsLoading] = useState(false); // Inicia como false, useEffect cuidará do primeiro load
+    const [isLoading, setIsLoading] = useState(false);
     const [isSectorModalOpen, setIsSectorModalOpen] = useState(false);
     const [isTaskModalOpen, setIsTaskModalOpen] = useState(false);
     const [isDetailModalOpen, setIsDetailModalOpen] = useState(false);
@@ -32,20 +32,16 @@ function DashboardPage() {
     const fetchSectors = async () => { try { const response = await api.get('/setores'); setSectors(response.data); } catch (error) { console.error("Erro ao buscar setores:", error); } };
     
     useEffect(() => {
-        // Ao montar a página, busca ambos os dados
-        const initialLoad = async () => {
-            setIsLoading(true);
-            await Promise.all([fetchSectors(), fetchTasks()]);
-            setIsLoading(false);
-        };
+        const initialLoad = async () => { setIsLoading(true); await Promise.all([fetchSectors(), fetchTasks()]); setIsLoading(false); };
         initialLoad();
-    }, []); // Roda apenas uma vez
+    }, []);
 
-    // Roda apenas quando os filtros mudam
     useEffect(() => {
-        fetchTasks();
+        // Para não buscar na carga inicial duas vezes
+        if (!isLoading) {
+            fetchTasks();
+        }
     }, [filters]);
-
 
     const handleAddTask = async (taskData) => { try { await api.post('/tarefas', taskData); toast.success("Tarefa adicionada com sucesso!"); fetchTasks(); } catch (error) { toast.error(error.response?.data?.error || "Erro ao adicionar tarefa."); } };
     
@@ -56,9 +52,8 @@ function DashboardPage() {
             if (!originalTask || updatedData.status === originalTask.status || !updatedData.status) {
                 toast.success("Tarefa atualizada com sucesso!");
             }
-            // A SOLUÇÃO: Busca os dados frescos da API
             await fetchTasks();
-            closeDetailModal();
+            // A lógica de fechar o modal foi movida para o TaskDetailModal para melhor controle
         } catch (error) {
             toast.error(error.response?.data?.error || "Erro ao atualizar tarefa.");
         }
@@ -67,7 +62,11 @@ function DashboardPage() {
     const handleUpdateTaskStatus = (taskId, newStatus) => {
         const taskToUpdate = tasks.find(task => task.id === taskId);
         if (taskToUpdate) {
-            handleUpdateTask(taskId, { ...taskToUpdate, status: newStatus });
+            // No drag-and-drop, não precisamos recarregar tudo, podemos ser otimistas
+            const updatedTask = { ...taskToUpdate, status: newStatus };
+            setTasks(tasks.map(t => t.id === taskId ? updatedTask : t));
+            // E então enviamos a atualização para a API em segundo plano
+            handleUpdateTask(taskId, { status: newStatus });
         }
     };
 
@@ -78,7 +77,13 @@ function DashboardPage() {
     const handleFilterChange = (filterName, value) => { setFilters(prevFilters => ({ ...prevFilters, [filterName]: value })); };
     const openTaskModal = (sector) => { setSelectedSector(sector); setIsTaskModalOpen(true); };
     const closeTaskModal = () => { setIsTaskModalOpen(false); setSelectedSector(null); };
-    const openDetailModal = (task) => { setSelectedTask(task); };
+    
+    // FUNÇÃO CORRIGIDA
+    const openDetailModal = (task) => {
+        setSelectedTask(task);
+        setIsDetailModalOpen(true);
+    };
+
     const closeDetailModal = () => { setIsDetailModalOpen(false); setSelectedTask(null); };
     const openMemberModal = (sector) => { setSectorForMembers(sector); setIsMemberModalOpen(true); };
     const closeMemberModal = () => { setIsMemberModalOpen(false); setSectorForMembers(null); };
