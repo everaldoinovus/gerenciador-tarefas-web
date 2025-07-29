@@ -60,32 +60,16 @@ function SettingsModal({ isOpen, onRequestClose, sector, onSettingsChange }) {
 
     const handleInvite = async (e) => { e.preventDefault(); if (!emailToInvite.trim() || !sector) return; try { await api.post(`/setores/${sector.id}/convidar`, { email: emailToInvite }); toast.success(`Convite enviado para ${emailToInvite}!`); setEmailToInvite(''); } catch (error) { toast.error(error.response?.data?.error || "Falha ao enviar convite."); } };
     const handleAddStatus = async (e) => { e.preventDefault(); if (!newStatusName.trim()) return; try { const response = await api.post(`/setores/${sector.id}/status`, { nome: newStatusName }); setStatuses([...statuses, response.data]); setNewStatusName(''); onSettingsChange(); toast.success("Coluna adicionada!"); } catch (error) { toast.error(error.response?.data?.error || "Erro ao adicionar coluna.") } };
-    //const handleDeleteStatus = async (statusId) => { if (!window.confirm("Tem certeza? Deletar uma coluna que contém tarefas não será permitido.")) return; try { await api.delete(`/status/${statusId}`); setStatuses(statuses.filter(s => s.id !== statusId)); onSettingsChange(); toast.success("Coluna deletada!"); } catch (error) { toast.error(error.response?.data?.error || "Erro ao deletar coluna.") } };
-const handleDeleteStatus = async (statusId) => {
-    // Vamos verificar o que é 'onSettingsChange'
-    console.log("Tipo de onSettingsChange:", typeof onSettingsChange);
-    alert(`O tipo de onSettingsChange é: ${typeof onSettingsChange}`);
+    const handleDeleteStatus = async (statusId) => { 
+		if (!window.confirm("Tem certeza? Deletar uma coluna que contém tarefas não será permitido.")) return; 
+		try { 
+			await api.delete(`/status/${statusId}`); 
+			setStatuses(statuses.filter(s => s.id !== statusId)); onSettingsChange(); toast.success("Coluna deletada!"); 
+		} catch (error) { 
+			toast.error(error.response?.data?.error || "Erro ao deletar coluna.") 
+		} 
+	};
 
-    if (!window.confirm("Tem certeza?")) return;
-    try {
-        await api.delete(`/status/${statusId}`);
-        toast.success("Coluna deletada!");
-        
-        if (typeof onSettingsChange === 'function') {
-            onSettingsChange();
-        } else {
-            console.error("'onSettingsChange' não é uma função!", onSettingsChange);
-        }
-        
-    } catch (error) {
-        // PONTO DE VERIFICAÇÃO 4: Em Caso de Erro na API
-        const errorMessage = error.response?.data?.error || error.message;
-        alert(`PASSO 4 (Modal) - ERRO:\n\nA API retornou um erro:\n\n${errorMessage}`);
-
-        toast.error(errorMessage);
-    }
-};
-	
 	
     const handleRenameStatus = async (statusId, newName) => { try { await api.put(`/status/${statusId}`, { nome: newName }); const newStatuses = statuses.map(s => s.id === statusId ? { ...s, nome: newName } : s); setStatuses(newStatuses); onSettingsChange(); toast.success("Coluna renomeada!"); } catch (error) { toast.error(error.response?.data?.error || "Erro ao renomear coluna.") } };
     
