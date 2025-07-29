@@ -30,14 +30,34 @@ function DashboardPage() {
     const [selectedSector, setSelectedSector] = useState(null);
     const [sectorForMembers, setSectorForMembers] = useState(null);
 
-    const fetchTasks = async () => { setIsLoading(true); try { const response = await api.get('/tarefas', { params: filters }); setTasks(response.data); } catch (error) { console.error("Erro ao buscar tarefas:", error); if (error.response?.status !== 401) toast.error("Falha ao carregar tarefas."); } finally { setIsLoading(false); } };
+    // FUNÇÃO fetchTasks MODIFICADA
+    const fetchTasks = async () => {
+        setIsLoading(true);
+        try {
+            const response = await api.get('/tarefas', { params: filters });
+            setTasks(response.data);
+            return response.data; // Retorna os dados para quem chamou
+        } catch (error) {
+            console.error("Erro ao buscar tarefas:", error);
+            if (error.response?.status !== 401) toast.error("Falha ao carregar tarefas.");
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
     const fetchSectors = async () => { try { const response = await api.get('/setores'); setSectors(response.data); } catch (error) { console.error("Erro ao buscar setores:", error); } };
     
     useEffect(() => {
-        const initialLoad = async () => { setIsLoading(true); await Promise.all([fetchSectors(), fetchTasks()]); setIsLoading(false); };
+        const initialLoad = async () => {
+            setIsLoading(true);
+            // Promise.all executa as buscas em paralelo
+            await Promise.all([fetchSectors(), fetchTasks()]);
+            setIsLoading(false);
+        };
         initialLoad();
-    }, []);
+    }, []); // Roda apenas na primeira montagem
 
+    // Roda apenas quando os filtros mudam, evitando a busca dupla inicial
     useEffect(() => {
         const isInitialLoad = tasks.length === 0 && sectors.length === 0;
         if (!isInitialLoad) {
@@ -58,13 +78,20 @@ function DashboardPage() {
                 toast.success("Tarefa atualizada com sucesso!");
             }
             
-            // Retorna a promise do fetchTasks para que o chamador possa esperar por ela.
-            // Isso irá buscar os dados frescos e enriquecidos (com responsavel_email) da API.
-            return fetchTasks();
+            // 1. Chama o fetchTasks e ESPERA pela nova lista de tarefas
+            const newTasks = await fetchTasks();
+            
+            // 2. Encontra a versão 100% atualizada da nossa tarefa nessa nova lista
+            const newlyFetchedTask = newTasks.find(t => t.id === taskId);
+            
+            // 3. Atualiza o estado que alimenta o modal com essa versão fresca
+            if (newlyFetchedTask) {
+                setSelectedTask(newlyFetchedTask);
+            }
 
         } catch (error) {
             toast.error(error.response?.data?.error || "Erro ao atualizar tarefa.");
-            // Propaga o erro para o chamador saber que a operação falhou.
+            // Propaga o erro para que o modal saiba que a operação falhou
             return Promise.reject(error);
         }
     };
