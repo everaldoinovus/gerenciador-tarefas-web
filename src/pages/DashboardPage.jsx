@@ -101,7 +101,7 @@ function DashboardPage() {
 				isOpen={isSettingsModalOpen} 
 				onRequestClose={closeSettingsModal} 
 				sector={sectorForSettings} 
-				onSettingsChange={handleSettingsChange}
+				//onSettingsChange={handleSettingsChange}
 			/>
         </div>
     );
