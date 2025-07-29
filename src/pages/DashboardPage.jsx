@@ -37,8 +37,8 @@ function DashboardPage() {
     }, []);
 
     useEffect(() => {
-        // Para não buscar na carga inicial duas vezes
-        if (!isLoading) {
+        const isInitialLoad = tasks.length === 0 && sectors.length === 0;
+        if (!isInitialLoad) {
             fetchTasks();
         }
     }, [filters]);
@@ -49,23 +49,21 @@ function DashboardPage() {
         try {
             await api.put(`/tarefas/${taskId}`, updatedData);
             const originalTask = tasks.find(task => task.id === taskId);
-            if (!originalTask || updatedData.status === originalTask.status || !updatedData.status) {
+            if (!originalTask || !updatedData.status || updatedData.status === originalTask.status) {
                 toast.success("Tarefa atualizada com sucesso!");
             }
-            await fetchTasks();
-            // A lógica de fechar o modal foi movida para o TaskDetailModal para melhor controle
+            return fetchTasks(); // Retorna a promise
         } catch (error) {
             toast.error(error.response?.data?.error || "Erro ao atualizar tarefa.");
+            return Promise.reject(error);
         }
     };
     
     const handleUpdateTaskStatus = (taskId, newStatus) => {
         const taskToUpdate = tasks.find(task => task.id === taskId);
         if (taskToUpdate) {
-            // No drag-and-drop, não precisamos recarregar tudo, podemos ser otimistas
             const updatedTask = { ...taskToUpdate, status: newStatus };
             setTasks(tasks.map(t => t.id === taskId ? updatedTask : t));
-            // E então enviamos a atualização para a API em segundo plano
             handleUpdateTask(taskId, { status: newStatus });
         }
     };
@@ -77,13 +75,7 @@ function DashboardPage() {
     const handleFilterChange = (filterName, value) => { setFilters(prevFilters => ({ ...prevFilters, [filterName]: value })); };
     const openTaskModal = (sector) => { setSelectedSector(sector); setIsTaskModalOpen(true); };
     const closeTaskModal = () => { setIsTaskModalOpen(false); setSelectedSector(null); };
-    
-    // FUNÇÃO CORRIGIDA
-    const openDetailModal = (task) => {
-        setSelectedTask(task);
-        setIsDetailModalOpen(true);
-    };
-
+    const openDetailModal = (task) => { setSelectedTask(task); setIsDetailModalOpen(true); };
     const closeDetailModal = () => { setIsDetailModalOpen(false); setSelectedTask(null); };
     const openMemberModal = (sector) => { setSectorForMembers(sector); setIsMemberModalOpen(true); };
     const closeMemberModal = () => { setIsMemberModalOpen(false); setSectorForMembers(null); };
@@ -103,5 +95,4 @@ function DashboardPage() {
         </div>
     );
 }
-
 export default DashboardPage;
