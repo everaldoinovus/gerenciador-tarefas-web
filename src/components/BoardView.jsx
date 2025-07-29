@@ -4,11 +4,12 @@ import React from 'react';
 import TaskCard from './TaskCard';
 import { DragDropContext, Droppable } from '@hello-pangea/dnd';
 
-function BoardView({ tasks, onCardClick, onUpdateStatus }) {
-  const statuses = ['Pendente', 'Em Andamento', 'Concluída'];
-
+// 1. Recebe 'statuses' como uma prop, em vez de ter uma lista fixa
+function BoardView({ tasks, statuses, onCardClick, onUpdateStatus }) {
+  
+  // Agrupa as tarefas pelo ID do status, não mais pelo nome
   const groupedTasks = statuses.reduce((acc, status) => {
-    acc[status] = tasks.filter(task => task.status === status);
+    acc[status.id] = tasks.filter(task => task.status_id === status.id);
     return acc;
   }, {});
 
@@ -16,40 +17,41 @@ function BoardView({ tasks, onCardClick, onUpdateStatus }) {
     if (!result.destination) return;
     const { source, destination, draggableId } = result;
     if (source.droppableId === destination.droppableId) return;
-    const newStatus = destination.droppableId;
-    const taskId = parseInt(draggableId);
-    onUpdateStatus(taskId, newStatus);
+
+    // O ID da coluna de destino agora é o NOVO STATUS ID
+    const newStatusId = parseInt(destination.droppableId, 10);
+    const taskId = parseInt(draggableId, 10);
+
+    // Precisamos atualizar a tarefa com o novo 'status_id'
+    // A função onUpdateStatus precisa ser ajustada para isso
+    onUpdateStatus(taskId, { status_id: newStatusId });
   };
 
   return (
     <DragDropContext onDragEnd={handleOnDragEnd}>
       <div className="kanban-board">
+        {/* 2. Mapeia a lista de status recebida para criar as colunas */}
         {statuses.map(status => (
-          <Droppable key={status} droppableId={status}>
+          // O ID do Droppable agora é o ID do status (um número)
+          <Droppable key={status.id} droppableId={status.id.toString()}>
             {(provided, snapshot) => (
               <div
                 className={`kanban-column ${snapshot.isDraggingOver ? 'is-over' : ''}`}
                 ref={provided.innerRef}
                 {...provided.droppableProps}
               >
-                <h3>{status} ({groupedTasks[status].length})</h3>
+                {/* 3. O título da coluna é o nome do status */}
+                <h3>{status.nome} ({groupedTasks[status.id]?.length || 0})</h3>
                 <div className="column-cards">
-                  {/* CONDIÇÃO ADICIONADA AQUI */}
-                  {groupedTasks[status].length === 0 ? (
-                    <div className="empty-state-message">
-                      <p>Nenhuma tarefa nesta coluna.</p>
-                    </div>
-                  ) : (
-                    groupedTasks[status].map((task, index) => (
-                      <TaskCard
-                        key={task.id}
-                        task={task}
-                        index={index}
-                        onCardClick={onCardClick}
-                        onUpdateStatus={onUpdateStatus}
-                      />
-                    ))
-                  )}
+                  {groupedTasks[status.id]?.map((task, index) => (
+                    <TaskCard
+                      key={task.id}
+                      task={task}
+                      index={index}
+                      onCardClick={onCardClick}
+                      onUpdateStatus={onUpdateStatus} // Esta função também precisará de ajustes
+                    />
+                  ))}
                   {provided.placeholder}
                 </div>
               </div>
