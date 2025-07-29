@@ -60,7 +60,38 @@ function SettingsModal({ isOpen, onRequestClose, sector, onSettingsChange }) {
 
     const handleInvite = async (e) => { e.preventDefault(); if (!emailToInvite.trim() || !sector) return; try { await api.post(`/setores/${sector.id}/convidar`, { email: emailToInvite }); toast.success(`Convite enviado para ${emailToInvite}!`); setEmailToInvite(''); } catch (error) { toast.error(error.response?.data?.error || "Falha ao enviar convite."); } };
     const handleAddStatus = async (e) => { e.preventDefault(); if (!newStatusName.trim()) return; try { const response = await api.post(`/setores/${sector.id}/status`, { nome: newStatusName }); setStatuses([...statuses, response.data]); setNewStatusName(''); onSettingsChange(); toast.success("Coluna adicionada!"); } catch (error) { toast.error(error.response?.data?.error || "Erro ao adicionar coluna.") } };
-    const handleDeleteStatus = async (statusId) => { if (!window.confirm("Tem certeza? Deletar uma coluna que contém tarefas não será permitido.")) return; try { await api.delete(`/status/${statusId}`); setStatuses(statuses.filter(s => s.id !== statusId)); onSettingsChange(); toast.success("Coluna deletada!"); } catch (error) { toast.error(error.response?.data?.error || "Erro ao deletar coluna.") } };
+    //const handleDeleteStatus = async (statusId) => { if (!window.confirm("Tem certeza? Deletar uma coluna que contém tarefas não será permitido.")) return; try { await api.delete(`/status/${statusId}`); setStatuses(statuses.filter(s => s.id !== statusId)); onSettingsChange(); toast.success("Coluna deletada!"); } catch (error) { toast.error(error.response?.data?.error || "Erro ao deletar coluna.") } };
+	const handleDeleteStatus = async (statusId) => {
+    // PONTO DE VERIFICAÇÃO 1: Confirmação da Ação
+    alert(`PASSO 1 (Modal):\n\nPronto para deletar o Status com ID: ${statusId}.\n\nClique em OK para continuar.`);
+
+    if (!window.confirm("Esta é a confirmação final. Tem certeza que deseja deletar?")) {
+        alert("Ação cancelada pelo usuário.");
+        return;
+    }
+
+    try {
+        // PONTO DE VERIFICAÇÃO 2: Antes da Chamada da API
+        alert(`PASSO 2 (Modal):\n\nChamando a API em 'DELETE /status/${statusId}'.\n\nClique em OK para enviar a requisição.`);
+        
+        await api.delete(`/status/${statusId}`);
+        
+        // PONTO DE VERIFICAÇÃO 3: Após o Sucesso da API
+        alert(`PASSO 3 (Modal):\n\nA API respondeu com sucesso!\n\nAgora chamando 'onSettingsChange()' para atualizar a tela.`);
+
+        toast.success("Coluna deletada!");
+        onSettingsChange();
+        
+    } catch (error) {
+        // PONTO DE VERIFICAÇÃO 4: Em Caso de Erro na API
+        const errorMessage = error.response?.data?.error || error.message;
+        alert(`PASSO 4 (Modal) - ERRO:\n\nA API retornou um erro:\n\n${errorMessage}`);
+
+        toast.error(errorMessage);
+    }
+};
+	
+	
     const handleRenameStatus = async (statusId, newName) => { try { await api.put(`/status/${statusId}`, { nome: newName }); const newStatuses = statuses.map(s => s.id === statusId ? { ...s, nome: newName } : s); setStatuses(newStatuses); onSettingsChange(); toast.success("Coluna renomeada!"); } catch (error) { toast.error(error.response?.data?.error || "Erro ao renomear coluna.") } };
     
     // Rota para reordenar ainda não foi criada, mas a lógica do front-end está aqui
