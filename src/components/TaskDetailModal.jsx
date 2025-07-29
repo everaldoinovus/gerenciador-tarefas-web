@@ -13,23 +13,43 @@ function TaskDetailModal({ isOpen, onRequestClose, task, sectors, onUpdateTask, 
     const [editableTask, setEditableTask] = useState(null);
     const [history, setHistory] = useState([]);
     const [members, setMembers] = useState([]);
+    const [isSaving, setIsSaving] = useState(false); // Estado para o spinner do botão
 
-    useEffect(() => { const fetchDetails = async () => { if (task) { try { const [historyRes, membersRes] = await Promise.all([ api.get(`/tarefas/${task.id}/historico`), api.get(`/setores/${task.setor_id}/membros`) ]); setHistory(historyRes.data); setMembers(membersRes.data); } catch (error) { toast.error("Não foi possível carregar os detalhes da tarefa."); } } }; if (isOpen) { fetchDetails(); } }, [isOpen, task]);
-    useEffect(() => { if (task) { const formattedDate = task.data_prevista_conclusao ? new Date(task.data_prevista_conclusao).toISOString().split('T')[0] : ''; setEditableTask({ ...task, data_prevista_conclusao: formattedDate }); } else { setEditableTask(null); } }, [task, isOpen]); // Adicionado isOpen para resetar ao reabrir
+    useEffect(() => { const fetchDetails = async () => { if (task) { try { const [historyRes, membersRes] = await Promise.all([ api.get(`/tarefas/${task.id}/historico`), api.get(`/setores/${task.setor_id}/membros`) ]); setHistory(historyRes.data); setMembers(membersRes.data); } catch (error) { toast.error("Não foi possível carregar os detalhes da tarefa."); } } }; if (isOpen) { fetchDetails(); setIsEditing(false); } }, [isOpen, task]);
+    useEffect(() => { if (task) { const formattedDate = task.data_prevista_conclusao ? new Date(task.data_prevista_conclusao).toISOString().split('T')[0] : ''; setEditableTask({ ...task, data_prevista_conclusao: formattedDate }); } else { setEditableTask(null); } }, [task]);
 
     const handleChange = (e) => { const { name, value } = e.target; setEditableTask(prev => ({ ...prev, [name]: value })); };
     
-    // ESTA É A VERSÃO REVERTIDA DA FUNÇÃO
-    const handleSaveChanges = () => {
+    // FUNÇÃO DE SALVAR CORRIGIDA
+    const handleSaveChanges = async () => {
+        setIsSaving(true);
         const taskToUpdate = { ...editableTask, responsavel_id: parseInt(editableTask.responsavel_id, 10) || null };
-        onUpdateTask(taskToUpdate.id, taskToUpdate);
-        setIsEditing(false);
+        try {
+            // Espera a atualização e o re-fetch dos dados terminarem
+            await onUpdateTask(taskToUpdate.id, taskToUpdate);
+            
+            // Só sai do modo de edição APÓS o sucesso
+            setIsEditing(false);
+        } catch (error) {
+            console.error("Falha ao salvar alterações:", error);
+            // Se der erro, o modal permanece aberto para o usuário tentar de novo.
+        } finally {
+            setIsSaving(false);
+        }
     };
 
     const handleCancelEdit = () => { const formattedDate = task.data_prevista_conclusao ? new Date(task.data_prevista_conclusao).toISOString().split('T')[0] : ''; setEditableTask({ ...task, data_prevista_conclusao: formattedDate }); setIsEditing(false); };
     const handleDelete = () => { if (window.confirm("Tem certeza?")) { onDeleteTask(task.id); onRequestClose(); } };
     const calculateDuration = (startDate, endDate) => { const start = new Date(startDate); const end = new Date(endDate); let diffMs = end - start; if (diffMs < 0) return '0m'; let duration = []; const days = Math.floor(diffMs / 86400000); if(days > 0) duration.push(`${days}d`); diffMs %= 86400000; const hours = Math.floor(diffMs / 3600000); if(hours > 0) duration.push(`${hours}h`); diffMs %= 3600000; const minutes = Math.floor(diffMs / 60000); if(minutes > 0 || duration.length === 0) duration.push(`${minutes}m`); return duration.join(' '); };
     const formatDateForDisplay = (dateString) => { if (!dateString) return 'N/A'; const date = new Date(dateString); const userTimezoneOffset = date.getTimezoneOffset() * 60000; return new Date(date.getTime() + userTimezoneOffset).toLocaleDateString('pt-BR'); };
+
+    // Sincroniza o editableTask com a prop 'task' que vem de fora, que é a mais atualizada
+    useEffect(() => {
+        if (task) {
+            setEditableTask(prev => ({...prev, ...task}));
+        }
+    }, [task]);
+
 
     if (!isOpen || !editableTask) return null;
 
@@ -40,7 +60,7 @@ function TaskDetailModal({ isOpen, onRequestClose, task, sectors, onUpdateTask, 
                     <input type="text" name="descricao" value={editableTask.descricao} onChange={handleChange} className="modal-title-input" />
                     <div className="form-grid"><label>Responsável</label><select name="responsavel_id" value={editableTask.responsavel_id || ''} onChange={handleChange}><option value="">-- Ninguém --</option>{members.map(m => <option key={m.id} value={m.id}>{m.email}</option>)}</select><label>Setor</label><select name="setor_id" value={editableTask.setor_id} onChange={handleChange}>{sectors.map(s => <option key={s.id} value={s.id}>{s.nome}</option>)}</select><label>Status</label><select name="status" value={editableTask.status} onChange={handleChange}><option value="Pendente">Pendente</option><option value="Em Andamento">Em Andamento</option><option value="Concluída">Concluída</option></select><label>Data Prevista</label><input type="date" name="data_prevista_conclusao" value={editableTask.data_prevista_conclusao} onChange={handleChange} /></div>
                     <h3>Anotações</h3><textarea name="notas" value={editableTask.notas || ''} onChange={handleChange} className="modal-notes-textarea"></textarea>
-                    <div className="modal-actions"><button onClick={handleSaveChanges} className="save-btn">Salvar Alterações</button><button onClick={handleCancelEdit} className="cancel-btn">Cancelar</button></div>
+                    <div className="modal-actions"><button onClick={handleSaveChanges} className="save-btn" disabled={isSaving}>{isSaving ? 'Salvando...' : 'Salvar Alterações'}</button><button onClick={handleCancelEdit} className="cancel-btn" disabled={isSaving}>Cancelar</button></div>
                 </div>
             ) : (
                 <div className="task-modal-view-mode">

@@ -47,31 +47,35 @@ function DashboardPage() {
 
     const handleAddTask = async (taskData) => { try { await api.post('/tarefas', taskData); toast.success("Tarefa adicionada com sucesso!"); fetchTasks(); } catch (error) { toast.error(error.response?.data?.error || "Erro ao adicionar tarefa."); } };
     
-    // ESTA É A VERSÃO REVERTIDA DA FUNÇÃO
+    // FUNÇÃO DE ATUALIZAÇÃO CORRIGIDA
     const handleUpdateTask = async (taskId, updatedData) => {
         try {
             await api.put(`/tarefas/${taskId}`, updatedData);
-            toast.success("Tarefa atualizada com sucesso!");
-
-            // Lógica de atualização manual do estado
-            const taskToUpdate = tasks.find(t => t.id === taskId);
-            const updatedTask = { ...taskToUpdate, ...updatedData };
-
-            setTasks(tasks.map(task => (task.id === taskId ? updatedTask : task)));
             
-            if (selectedTask && selectedTask.id === taskId) {
-                setSelectedTask(updatedTask);
+            const originalTask = tasks.find(task => task.id === taskId);
+            // Mostra o toast apenas para edições manuais (não drag-and-drop)
+            if (!originalTask || !updatedData.status || updatedData.status === originalTask.status) {
+                toast.success("Tarefa atualizada com sucesso!");
             }
+            
+            // Retorna a promise do fetchTasks para que o chamador possa esperar por ela.
+            // Isso irá buscar os dados frescos e enriquecidos (com responsavel_email) da API.
+            return fetchTasks();
+
         } catch (error) {
             toast.error(error.response?.data?.error || "Erro ao atualizar tarefa.");
+            // Propaga o erro para o chamador saber que a operação falhou.
+            return Promise.reject(error);
         }
     };
     
     const handleUpdateTaskStatus = (taskId, newStatus) => {
         const taskToUpdate = tasks.find(task => task.id === taskId);
         if (taskToUpdate) {
+            // Atualiza a UI otimisticamente para o drag-and-drop ser rápido
             const updatedTask = { ...taskToUpdate, status: newStatus };
             setTasks(tasks.map(t => t.id === taskId ? updatedTask : t));
+            // Envia a atualização para a API em segundo plano
             api.put(`/tarefas/${taskId}`, { status: newStatus }).catch(err => {
                 toast.error("Falha ao atualizar status.");
                 fetchTasks(); // Reverte em caso de erro
