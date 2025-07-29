@@ -710,4 +710,32 @@ export default TaskForm;
   color: #6c757d;
   font-style: italic;
 }
+
+/* ================================== */
+/* ESTILOS PARA MODAL DE CONFIGURAÇÕES*/
+/* ================================== */
+.settings-modal-header {
+  padding: 20px;
+  background-color: #f7f7f7;
+  border-bottom: 1px solid #eee;
+}
+.settings-modal-header h2 {
+  margin: 0 0 15px 0;
+}
+.tabs button {
+  padding: 10px 15px;
+  border: none;
+  background-color: transparent;
+  cursor: pointer;
+  font-size: 1rem;
+  margin-right: 10px;
+  border-bottom: 3px solid transparent;
+}
+.tabs button.active {
+  border-bottom: 3px solid #007bff;
+  font-weight: bold;
+}
+.settings-modal-content {
+  padding: 20px;
+}
     
