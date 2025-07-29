@@ -61,26 +61,21 @@ function SettingsModal({ isOpen, onRequestClose, sector, onSettingsChange }) {
     const handleInvite = async (e) => { e.preventDefault(); if (!emailToInvite.trim() || !sector) return; try { await api.post(`/setores/${sector.id}/convidar`, { email: emailToInvite }); toast.success(`Convite enviado para ${emailToInvite}!`); setEmailToInvite(''); } catch (error) { toast.error(error.response?.data?.error || "Falha ao enviar convite."); } };
     const handleAddStatus = async (e) => { e.preventDefault(); if (!newStatusName.trim()) return; try { const response = await api.post(`/setores/${sector.id}/status`, { nome: newStatusName }); setStatuses([...statuses, response.data]); setNewStatusName(''); onSettingsChange(); toast.success("Coluna adicionada!"); } catch (error) { toast.error(error.response?.data?.error || "Erro ao adicionar coluna.") } };
     //const handleDeleteStatus = async (statusId) => { if (!window.confirm("Tem certeza? Deletar uma coluna que contém tarefas não será permitido.")) return; try { await api.delete(`/status/${statusId}`); setStatuses(statuses.filter(s => s.id !== statusId)); onSettingsChange(); toast.success("Coluna deletada!"); } catch (error) { toast.error(error.response?.data?.error || "Erro ao deletar coluna.") } };
-	const handleDeleteStatus = async (statusId) => {
-    // PONTO DE VERIFICAÇÃO 1: Confirmação da Ação
-    alert(`PASSO 1 (Modal):\n\nPronto para deletar o Status com ID: ${statusId}.\n\nClique em OK para continuar.`);
+const handleDeleteStatus = async (statusId) => {
+    // Vamos verificar o que é 'onSettingsChange'
+    console.log("Tipo de onSettingsChange:", typeof onSettingsChange);
+    alert(`O tipo de onSettingsChange é: ${typeof onSettingsChange}`);
 
-    if (!window.confirm("Esta é a confirmação final. Tem certeza que deseja deletar?")) {
-        alert("Ação cancelada pelo usuário.");
-        return;
-    }
-
+    if (!window.confirm("Tem certeza?")) return;
     try {
-        // PONTO DE VERIFICAÇÃO 2: Antes da Chamada da API
-        alert(`PASSO 2 (Modal):\n\nChamando a API em 'DELETE /status/${statusId}'.\n\nClique em OK para enviar a requisição.`);
-        
         await api.delete(`/status/${statusId}`);
-        
-        // PONTO DE VERIFICAÇÃO 3: Após o Sucesso da API
-        alert(`PASSO 3 (Modal):\n\nA API respondeu com sucesso!\n\nAgora chamando 'onSettingsChange()' para atualizar a tela.`);
-
         toast.success("Coluna deletada!");
-        onSettingsChange();
+        
+        if (typeof onSettingsChange === 'function') {
+            onSettingsChange();
+        } else {
+            console.error("'onSettingsChange' não é uma função!", onSettingsChange);
+        }
         
     } catch (error) {
         // PONTO DE VERIFICAÇÃO 4: Em Caso de Erro na API
