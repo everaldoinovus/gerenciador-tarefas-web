@@ -1,3 +1,5 @@
+// Arquivo: gerenciador-tarefas-web/src/pages/DashboardPage.jsx
+
 import React, { useState, useEffect } from 'react';
 import { ClipLoader } from 'react-spinners';
 import { toast } from 'react-toastify';
@@ -45,17 +47,23 @@ function DashboardPage() {
 
     const handleAddTask = async (taskData) => { try { await api.post('/tarefas', taskData); toast.success("Tarefa adicionada com sucesso!"); fetchTasks(); } catch (error) { toast.error(error.response?.data?.error || "Erro ao adicionar tarefa."); } };
     
+    // ESTA É A VERSÃO REVERTIDA DA FUNÇÃO
     const handleUpdateTask = async (taskId, updatedData) => {
         try {
             await api.put(`/tarefas/${taskId}`, updatedData);
-            const originalTask = tasks.find(task => task.id === taskId);
-            if (!originalTask || !updatedData.status || updatedData.status === originalTask.status) {
-                toast.success("Tarefa atualizada com sucesso!");
+            toast.success("Tarefa atualizada com sucesso!");
+
+            // Lógica de atualização manual do estado
+            const taskToUpdate = tasks.find(t => t.id === taskId);
+            const updatedTask = { ...taskToUpdate, ...updatedData };
+
+            setTasks(tasks.map(task => (task.id === taskId ? updatedTask : task)));
+            
+            if (selectedTask && selectedTask.id === taskId) {
+                setSelectedTask(updatedTask);
             }
-            return fetchTasks(); // Retorna a promise
         } catch (error) {
             toast.error(error.response?.data?.error || "Erro ao atualizar tarefa.");
-            return Promise.reject(error);
         }
     };
     
@@ -64,7 +72,10 @@ function DashboardPage() {
         if (taskToUpdate) {
             const updatedTask = { ...taskToUpdate, status: newStatus };
             setTasks(tasks.map(t => t.id === taskId ? updatedTask : t));
-            handleUpdateTask(taskId, { status: newStatus });
+            api.put(`/tarefas/${taskId}`, { status: newStatus }).catch(err => {
+                toast.error("Falha ao atualizar status.");
+                fetchTasks(); // Reverte em caso de erro
+            });
         }
     };
 
@@ -95,4 +106,5 @@ function DashboardPage() {
         </div>
     );
 }
+
 export default DashboardPage;

@@ -1,3 +1,5 @@
+// Arquivo: gerenciador-tarefas-web/src/components/TaskDetailModal.jsx
+
 import React, { useState, useEffect } from 'react';
 import Modal from 'react-modal';
 import { toast } from 'react-toastify';
@@ -13,18 +15,15 @@ function TaskDetailModal({ isOpen, onRequestClose, task, sectors, onUpdateTask, 
     const [members, setMembers] = useState([]);
 
     useEffect(() => { const fetchDetails = async () => { if (task) { try { const [historyRes, membersRes] = await Promise.all([ api.get(`/tarefas/${task.id}/historico`), api.get(`/setores/${task.setor_id}/membros`) ]); setHistory(historyRes.data); setMembers(membersRes.data); } catch (error) { toast.error("Não foi possível carregar os detalhes da tarefa."); } } }; if (isOpen) { fetchDetails(); } }, [isOpen, task]);
-    useEffect(() => { if (task) { const formattedDate = task.data_prevista_conclusao ? new Date(task.data_prevista_conclusao).toISOString().split('T')[0] : ''; setEditableTask({ ...task, data_prevista_conclusao: formattedDate }); } else { setEditableTask(null); } }, [task]);
+    useEffect(() => { if (task) { const formattedDate = task.data_prevista_conclusao ? new Date(task.data_prevista_conclusao).toISOString().split('T')[0] : ''; setEditableTask({ ...task, data_prevista_conclusao: formattedDate }); } else { setEditableTask(null); } }, [task, isOpen]); // Adicionado isOpen para resetar ao reabrir
 
     const handleChange = (e) => { const { name, value } = e.target; setEditableTask(prev => ({ ...prev, [name]: value })); };
     
-    const handleSaveChanges = async () => {
+    // ESTA É A VERSÃO REVERTIDA DA FUNÇÃO
+    const handleSaveChanges = () => {
         const taskToUpdate = { ...editableTask, responsavel_id: parseInt(editableTask.responsavel_id, 10) || null };
-        try {
-            await onUpdateTask(taskToUpdate.id, taskToUpdate);
-            onRequestClose(); // Fecha o modal após o sucesso
-        } catch (error) {
-            console.error("Falha ao salvar alterações:", error);
-        }
+        onUpdateTask(taskToUpdate.id, taskToUpdate);
+        setIsEditing(false);
     };
 
     const handleCancelEdit = () => { const formattedDate = task.data_prevista_conclusao ? new Date(task.data_prevista_conclusao).toISOString().split('T')[0] : ''; setEditableTask({ ...task, data_prevista_conclusao: formattedDate }); setIsEditing(false); };
