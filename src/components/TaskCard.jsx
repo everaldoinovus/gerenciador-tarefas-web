@@ -3,9 +3,11 @@
 import React from 'react';
 import { Draggable } from '@hello-pangea/dnd';
 
-function TaskCard({ task, index, onCardClick, onUpdateStatus, isDragDisabled = false }) {
+function TaskCard({ task, index, onCardClick, isDragDisabled = false }) {
   
-  // Função para formatar a data, garantindo que a hora não afete o dia
+  // A prop 'onUpdateStatus' não é mais necessária aqui, pois a mudança de status
+  // por drag-and-drop é gerenciada pelo BoardView, e a edição manual pelo TaskDetailModal.
+
   const formatDate = (dateString) => {
     if (!dateString) return 'N/A';
     const date = new Date(dateString);
@@ -13,33 +15,13 @@ function TaskCard({ task, index, onCardClick, onUpdateStatus, isDragDisabled = f
     return new Date(date.getTime() + userTimezoneOffset).toLocaleDateString('pt-BR');
   };
   
-  // Impede que o clique no select propague para o card e abra o modal
-  const handleSelectClick = (e) => {
-    e.stopPropagation();
-  };
-
-  // O conteúdo interno do card, para ser reutilizado
+  // O conteúdo interno do card, agora sem o <select>
   const CardInnerContent = () => (
-    <>
-      <div className="task-info">
-        <strong>{task.descricao}</strong>
-        <p>Responsável: {task.responsavel_email || 'Ninguém'}</p>
-        <p>Data de Conclusão: {formatDate(task.data_prevista_conclusao)}</p>
-      </div>
-      <select 
-        value={task.status} 
-        onChange={(e) => { 
-          e.stopPropagation(); // Impede o clique de abrir o modal
-          onUpdateStatus(task.id, e.target.value);
-        }}
-        onClick={handleSelectClick}
-        className="status-select"
-      >
-        <option value="Pendente">Pendente</option>
-        <option value="Em Andamento">Em Andamento</option>
-        <option value="Concluída">Concluída</option>
-      </select>
-    </>
+    <div className="task-info">
+      <strong>{task.descricao}</strong>
+      <p>Responsável: {task.responsavel_email || 'Ninguém'}</p>
+      <p>Data de Conclusão: {formatDate(task.data_prevista_conclusao)}</p>
+    </div>
   );
 
   // Se o drag and drop estiver desabilitado (modo lista), renderiza um 'li' simples

@@ -79,7 +79,7 @@ function DashboardPage() {
                 return (
                     <section key={sector.id} className="sector-group">
                         <div className="sector-header"><div className="sector-title-controls"><button onClick={() => openTaskModal(sector)} className="add-task-btn">+Tarefa</button><h2>Setor: {sector.nome}</h2></div>{(sector.funcao === 'dono' || useAuth().funcaoGlobal === 'master') && (<button onClick={() => openSettingsModal(sector)} className="settings-btn" title="Configurações do setor">⚙️</button>)}</div>
-                        {viewMode === 'list' ? ( <div className="task-list">...</div> ) : ( <BoardView tasks={tasksForThisSector} statuses={sectorStatuses} onCardClick={openDetailModal} onUpdateStatus={handleUpdateTaskStatus} /> )}
+                        {viewMode === 'list' ? ( <div className="task-list">...</div> ) : ( <BoardView tasks={tasksForThisSector} statuses={sectorStatuses} onCardClick={openDetailModal} /> )}
                     </section>
                 );
             })}

@@ -49,7 +49,7 @@ function BoardView({ tasks, statuses, onCardClick, onUpdateStatus }) {
                       task={task}
                       index={index}
                       onCardClick={onCardClick}
-                      onUpdateStatus={onUpdateStatus} // Esta função também precisará de ajustes
+                      // Esta função também precisará de ajustes
                     />
                   ))}
                   {provided.placeholder}
