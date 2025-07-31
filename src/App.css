@@ -749,4 +749,10 @@ export default TaskForm;
 .status-item input { font-size: 1rem; padding: 5px; border: 1px solid #007bff; border-radius: 4px; width: 70%; }
 .action-btn { background: none; border: none; cursor: pointer; font-size: 1rem; opacity: 0.5; }
 .action-btn:hover { opacity: 1; }
+
+.drag-handle {
+    margin-right: 10px;
+    cursor: grab;
+    color: #ccc;
+}
     
