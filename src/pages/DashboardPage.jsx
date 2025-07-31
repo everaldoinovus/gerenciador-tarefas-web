@@ -1,4 +1,5 @@
 // Arquivo: gerenciador-tarefas-web/src/pages/DashboardPage.jsx
+
 import React, { useState, useEffect } from 'react';
 import { ClipLoader } from 'react-spinners';
 import { toast } from 'react-toastify';
@@ -39,7 +40,7 @@ function DashboardPage() {
     
     const handleAddTask = async (taskData) => { try { await api.post('/tarefas', taskData); toast.success("Tarefa adicionada com sucesso!"); refreshAllData(); } catch (error) { toast.error(error.response?.data?.error || "Erro ao adicionar tarefa."); } };
     const handleUpdateTask = async (taskId, updatedData) => { try { await api.put(`/tarefas/${taskId}`, updatedData); if (!updatedData.status_id) { toast.success("Tarefa atualizada com sucesso!"); } const newTasks = await fetchTasks(); const newlyFetchedTask = newTasks.find(t => t.id === taskId); if (newlyFetchedTask) { setSelectedTask(newlyFetchedTask); } } catch (error) { toast.error(error.response?.data?.error || "Erro ao atualizar tarefa."); return Promise.reject(error); } };
-    /*const handleUpdateTaskStatus = (taskId, updateData) => {
+    const handleUpdateTaskStatus = (taskId, updateData) => {
         const taskToUpdate = tasks.find(task => task.id === taskId);
         if (taskToUpdate) {
             const updatedTask = { ...taskToUpdate, ...updateData };
@@ -53,28 +54,7 @@ function DashboardPage() {
                 fetchTasks();
             });
         }
-    };*/
-	
-	const handleUpdateTaskStatus = (taskId, updateData) => {
-    // DEPURAÇÃO
-    console.log(`[Dashboard] handleUpdateTaskStatus chamado com:`, taskId, updateData);
-    alert(`[Dashboard] handleUpdateTaskStatus chamado com:\nTarefa ID ${taskId}\nUpdate Data: ${JSON.stringify(updateData)}`);
-    
-    const taskToUpdate = tasks.find(task => task.id === taskId);
-    if (taskToUpdate) {
-            const updatedTask = { ...taskToUpdate, ...updateData };
-            if (updateData.status_id) {
-                const newStatus = statuses[taskToUpdate.setor_id]?.find(s => s.id === updateData.status_id);
-                if (newStatus) updatedTask.status_nome = newStatus.nome;
-            }
-            setTasks(tasks.map(t => t.id === taskId ? updatedTask : t));
-            api.put(`/tarefas/${taskId}`, updateData).catch(err => {
-                toast.error("Falha ao atualizar status.");
-                fetchTasks();
-            });
-    }
-};
-	
+    };
     const handleDeleteTask = async (taskId) => { try { await api.delete(`/tarefas/${taskId}`); toast.success("Tarefa deletada com sucesso!"); refreshAllData(); } catch (error) { toast.error(error.response?.data?.error || "Erro ao deletar tarefa."); } };
     const handleAcceptInvitation = () => { refreshAllData(); };
 
@@ -100,7 +80,18 @@ function DashboardPage() {
                 return (
                     <section key={sector.id} className="sector-group">
                         <div className="sector-header"><div className="sector-title-controls"><button onClick={() => openTaskModal(sector)} className="add-task-btn">+Tarefa</button><h2>Setor: {sector.nome}</h2></div>{(sector.funcao === 'dono' || useAuth().funcaoGlobal === 'master') && (<button onClick={() => openSettingsModal(sector)} className="settings-btn" title="Configurações do setor">⚙️</button>)}</div>
-                        {viewMode === 'list' ? ( <div className="task-list">...</div> ) : ( <BoardView tasks={tasksForThisSector} statuses={sectorStatuses} onCardClick={openDetailModal} /> )}
+                        {viewMode === 'list' ? ( 
+                            <div className="task-list">
+                                <ul>{tasksForThisSector.map((task, index) => (<TaskCard key={task.id} task={task} index={index} onCardClick={openDetailModal} isDragDisabled={true} />))}</ul>
+                            </div> 
+                        ) : ( 
+                            <BoardView 
+                                tasks={tasksForThisSector} 
+                                statuses={sectorStatuses} 
+                                onCardClick={openDetailModal} 
+                                onUpdateStatus={handleUpdateTaskStatus} 
+                            /> 
+                        )}
                     </section>
                 );
             })}
@@ -112,4 +103,5 @@ function DashboardPage() {
         </div>
     );
 }
+
 export default DashboardPage;

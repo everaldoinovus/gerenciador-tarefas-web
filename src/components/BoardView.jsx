@@ -13,7 +13,7 @@ function BoardView({ tasks, statuses, onCardClick, onUpdateStatus }) {
     return acc;
   }, {});
 
-  /*const handleOnDragEnd = (result) => {
+  const handleOnDragEnd = (result) => {
     if (!result.destination) return;
     const { source, destination, draggableId } = result;
     if (source.droppableId === destination.droppableId) return;
@@ -25,22 +25,9 @@ function BoardView({ tasks, statuses, onCardClick, onUpdateStatus }) {
     // Precisamos atualizar a tarefa com o novo 'status_id'
     // A função onUpdateStatus precisa ser ajustada para isso
     onUpdateStatus(taskId, { status_id: newStatusId });
-  };*/
+  };
   
-  const handleOnDragEnd = (result) => {
-    if (!result.destination) return;
-    const { source, destination, draggableId } = result;
-    if (source.droppableId === destination.droppableId) return;
 
-    const newStatusId = parseInt(destination.droppableId, 10);
-    const taskId = parseInt(draggableId, 10);
-
-    // DEPURAÇÃO
-    console.log(`[BoardView] Drag End: Tarefa ID ${taskId} movida para Status ID ${newStatusId}`);
-    alert(`[BoardView] Drag End:\nTarefa ID ${taskId}\nNovo Status ID ${newStatusId}`);
-
-    onUpdateStatus(taskId, { status_id: newStatusId });
-};
 
   return (
     <DragDropContext onDragEnd={handleOnDragEnd}>
