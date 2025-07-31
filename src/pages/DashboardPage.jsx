@@ -1,3 +1,4 @@
+// Arquivo: gerenciador-tarefas-web/src/pages/DashboardPage.jsx
 import React, { useState, useEffect } from 'react';
 import { ClipLoader } from 'react-spinners';
 import { toast } from 'react-toastify';
@@ -32,23 +33,27 @@ function DashboardPage() {
     const fetchTasks = async () => { setIsLoading(true); try { const response = await api.get('/tarefas', { params: filters }); setTasks(response.data); return response.data; } catch (error) { console.error("Erro ao buscar tarefas:", error); if (error.response?.status !== 401) toast.error("Falha ao carregar tarefas."); } finally { setIsLoading(false); } };
     const fetchSectorsAndStatuses = async () => { try { const sectorsRes = await api.get('/setores'); const sectorsData = sectorsRes.data; setSectors(sectorsData); const statusesPromises = sectorsData.map(sector => api.get(`/setores/${sector.id}/status`)); const statusesResults = await Promise.all(statusesPromises); const statusesMap = {}; statusesResults.forEach((result, index) => { const sectorId = sectorsData[index].id; statusesMap[sectorId] = result.data; }); setStatuses(statusesMap); } catch (error) { console.error("Erro ao buscar setores ou status:", error); toast.error("Falha ao carregar a estrutura dos setores."); } };
     
-    const refreshAllData = () => {
-        fetchSectorsAndStatuses();
-        fetchTasks();
-    };
-    
-    useEffect(() => {
-        refreshAllData();
-    }, []);
-
-    useEffect(() => {
-        const isInitialLoad = tasks.length === 0 && sectors.length === 0;
-        if (!isInitialLoad) { fetchTasks(); }
-    }, [filters]);
+    const refreshAllData = () => { Promise.all([fetchSectorsAndStatuses(), fetchTasks()]); };
+    useEffect(() => { refreshAllData(); }, []);
+    useEffect(() => { const isInitialLoad = tasks.length === 0 && sectors.length === 0; if (!isInitialLoad) { fetchTasks(); } }, [filters]);
     
     const handleAddTask = async (taskData) => { try { await api.post('/tarefas', taskData); toast.success("Tarefa adicionada com sucesso!"); refreshAllData(); } catch (error) { toast.error(error.response?.data?.error || "Erro ao adicionar tarefa."); } };
     const handleUpdateTask = async (taskId, updatedData) => { try { await api.put(`/tarefas/${taskId}`, updatedData); if (!updatedData.status_id) { toast.success("Tarefa atualizada com sucesso!"); } const newTasks = await fetchTasks(); const newlyFetchedTask = newTasks.find(t => t.id === taskId); if (newlyFetchedTask) { setSelectedTask(newlyFetchedTask); } } catch (error) { toast.error(error.response?.data?.error || "Erro ao atualizar tarefa."); return Promise.reject(error); } };
-    const handleUpdateTaskStatus = (taskId, updateData) => { const taskToUpdate = tasks.find(task => task.id === taskId); if (taskToUpdate) { const updatedTask = { ...taskToUpdate, ...updateData }; if (updateData.status_id) { const newStatus = statuses[taskToUpdate.setor_id]?.find(s => s.id === updateData.status_id); if(newStatus) updatedTask.status_nome = newStatus.nome; } setTasks(tasks.map(t => t.id === taskId ? updatedTask : t)); api.put(`/tarefas/${taskId}`, updateData).catch(err => { toast.error("Falha ao atualizar status."); fetchTasks(); }); } };
+    const handleUpdateTaskStatus = (taskId, updateData) => {
+        const taskToUpdate = tasks.find(task => task.id === taskId);
+        if (taskToUpdate) {
+            const updatedTask = { ...taskToUpdate, ...updateData };
+            if (updateData.status_id) {
+                const newStatus = statuses[taskToUpdate.setor_id]?.find(s => s.id === updateData.status_id);
+                if (newStatus) updatedTask.status_nome = newStatus.nome;
+            }
+            setTasks(tasks.map(t => t.id === taskId ? updatedTask : t));
+            api.put(`/tarefas/${taskId}`, updateData).catch(err => {
+                toast.error("Falha ao atualizar status.");
+                fetchTasks();
+            });
+        }
+    };
     const handleDeleteTask = async (taskId) => { try { await api.delete(`/tarefas/${taskId}`); toast.success("Tarefa deletada com sucesso!"); refreshAllData(); } catch (error) { toast.error(error.response?.data?.error || "Erro ao deletar tarefa."); } };
     const handleAcceptInvitation = () => { refreshAllData(); };
 
@@ -79,12 +84,11 @@ function DashboardPage() {
                 );
             })}
             </div>
-            <SectorManager isOpen={isSectorModalOpen} onRequestClose={() => setIsSectorModalOpen(false)} onSectorsUpdate={refreshAllData} />
-            <TaskModal isOpen={isTaskModalOpen} onRequestClose={closeTaskModal} onTaskAdd={handleAddTask} sector={selectedSector} />
-            <TaskDetailModal isOpen={isDetailModalOpen} onRequestClose={closeDetailModal} task={selectedTask} sectors={sectors} onUpdateTask={handleUpdateTask} onDeleteTask={handleDeleteTask} />
             <SettingsModal isOpen={isSettingsModalOpen} onRequestClose={closeSettingsModal} sector={sectorForSettings} onSettingsChange={refreshAllData} />
+            <TaskDetailModal isOpen={isDetailModalOpen} onRequestClose={closeDetailModal} task={selectedTask} sectors={sectors} onUpdateTask={handleUpdateTask} onDeleteTask={handleDeleteTask} />
+            <TaskModal isOpen={isTaskModalOpen} onRequestClose={closeTaskModal} onTaskAdd={handleAddTask} sector={selectedSector} />
+            <SectorManager isOpen={isSectorModalOpen} onRequestClose={() => setIsSectorModalOpen(false)} onSectorsUpdate={refreshAllData} />
         </div>
     );
 }
-
 export default DashboardPage;
