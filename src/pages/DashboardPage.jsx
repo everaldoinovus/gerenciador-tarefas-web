@@ -1,5 +1,4 @@
 // Arquivo: gerenciador-tarefas-web/src/pages/DashboardPage.jsx
-
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { ClipLoader } from 'react-spinners';
@@ -32,11 +31,11 @@ function DashboardPage() {
     const [selectedSector, setSelectedSector] = useState(null);
     const [sectorForSettings, setSectorForSettings] = useState(null);
 
-    const fetchTasks = async () => { setIsLoading(true); try { const response = await api.get('/tarefas', { params: filters }); setTasks(response.data); return response.data; } catch (error) { console.error("Erro ao buscar tarefas:", error); if (error.response?.status !== 401) toast.error("Falha ao carregar tarefas."); } finally { setIsLoading(false); } };
+    const fetchTasks = async () => { try { const response = await api.get('/tarefas', { params: filters }); setTasks(response.data); return response.data; } catch (error) { console.error("Erro ao buscar tarefas:", error); if (error.response?.status !== 401) toast.error("Falha ao carregar tarefas."); } };
     const fetchSectorsAndStatuses = async () => { try { const sectorsRes = await api.get('/setores'); const sectorsData = sectorsRes.data; setSectors(sectorsData); const statusesPromises = sectorsData.map(sector => api.get(`/setores/${sector.id}/status`)); const statusesResults = await Promise.all(statusesPromises); const statusesMap = {}; statusesResults.forEach((result, index) => { const sectorId = sectorsData[index].id; statusesMap[sectorId] = result.data; }); setStatuses(statusesMap); } catch (error) { console.error("Erro ao buscar setores ou status:", error); toast.error("Falha ao carregar a estrutura dos setores."); } };
     
     const refreshAllData = () => {
-        Promise.all([fetchSectorsAndStatuses(), fetchTasks()]);
+        return Promise.all([fetchSectorsAndStatuses(), fetchTasks()]);
     };
     
     useEffect(() => {
@@ -46,7 +45,9 @@ function DashboardPage() {
 
     useEffect(() => {
         const isInitialLoad = tasks.length === 0 && sectors.length === 0;
-        if (!isInitialLoad) { fetchTasks(); }
+        if (!isInitialLoad) {
+            fetchTasks();
+        }
     }, [filters]);
     
     const handleAddTask = async (taskData) => { try { await api.post('/tarefas', taskData); toast.success("Tarefa adicionada com sucesso!"); refreshAllData(); } catch (error) { toast.error(error.response?.data?.error || "Erro ao adicionar tarefa."); } };
@@ -78,7 +79,7 @@ function DashboardPage() {
                 </div>
             </header>
             <div className="main-controls">
-                {userInfo?.funcaoGlobal === 'master' && (
+                {(userInfo?.funcaoGlobal === 'master') && (
                     <button onClick={() => setIsSectorModalOpen(true)} className="manage-sectors-btn">
                       Gerenciar Setores
                     </button>
@@ -113,6 +114,7 @@ function DashboardPage() {
 }
 
 export default DashboardPage;
+
 
 /*
 import React, { useState, useEffect } from 'react';
