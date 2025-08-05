@@ -97,7 +97,15 @@ function DashboardPage() {
             })}
             </div>
             <SettingsModal isOpen={isSettingsModalOpen} onRequestClose={closeSettingsModal} sector={sectorForSettings} onSettingsChange={refreshAllData} />
-            <TaskDetailModal isOpen={isDetailModalOpen} onRequestClose={closeDetailModal} task={selectedTask} sectors={sectors} onUpdateTask={handleUpdateTask} onDeleteTask={handleDeleteTask} />
+            <TaskDetailModal 
+				isOpen={isDetailModalOpen} 
+				onRequestClose={closeDetailModal} 
+				task={selectedTask} 
+				sectors={sectors}
+				statuses={statuses}
+				onUpdateTask={handleUpdateTask} 
+				onDeleteTask={handleDeleteTask} 
+			/>
             <TaskModal isOpen={isTaskModalOpen} onRequestClose={closeTaskModal} onTaskAdd={handleAddTask} sector={selectedSector} />
             <SectorManager isOpen={isSectorModalOpen} onRequestClose={() => setIsSectorModalOpen(false)} onSectorsUpdate={refreshAllData} />
         </div>

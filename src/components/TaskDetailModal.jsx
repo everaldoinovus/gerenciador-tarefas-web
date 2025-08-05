@@ -8,7 +8,7 @@ import api from '../services/api';
 const customModalStyles = { content: { top: '50%', left: '50%', right: 'auto', bottom: 'auto', marginRight: '-50%', transform: 'translate(-50%, -50%)', width: '600px', maxHeight: '90vh', overflowY: 'auto', border: '1px solid #ccc', borderRadius: '8px', padding: '25px', }, overlay: { backgroundColor: 'rgba(0, 0, 0, 0.75)', zIndex: 1000 } };
 Modal.setAppElement('#root');
 
-function TaskDetailModal({ isOpen, onRequestClose, task, sectors, onUpdateTask, onDeleteTask }) {
+function TaskDetailModal({ isOpen, onRequestClose, task, sectors, statuses, onUpdateTask, onDeleteTask }) {
     const [isEditing, setIsEditing] = useState(false);
     const [editableTask, setEditableTask] = useState(null);
     const [history, setHistory] = useState([]);
