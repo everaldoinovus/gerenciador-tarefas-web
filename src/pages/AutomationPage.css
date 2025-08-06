@@ -24,3 +24,10 @@
 .rule-trigger, .rule-actions { font-size: 0.9rem; }
 .rule-actions ul { list-style: disc; margin: 5px 0 0 20px; padding: 0; }
 .rule-actions ul li { border: none; padding: 2px 0; }
+
+.return-status {
+    background-color: #f8f9fa;
+    padding: 10px;
+    border-radius: 5px;
+    margin-top: 10px;
+}
