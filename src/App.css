@@ -369,6 +369,11 @@ export default TaskForm;
   box-shadow: 0 4px 8px rgba(0,0,0,0.1);
 }
 
+.task-card--em-andamento {
+  background-color: #fffbeb; /* Amarelo bem claro (cor de fundo) */
+  border-left-color: #f59e0b; /* Laranja/âmbar (cor da borda) */
+}
+
 /* ================================== */
 /* ESTILOS PARA O INDICADOR DE CARGA  */
 /* ================================== */
