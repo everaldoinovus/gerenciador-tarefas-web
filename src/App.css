@@ -369,16 +369,14 @@ export default TaskForm;*/
   box-shadow: 0 4px 8px rgba(0,0,0,0.1);
 }
 
-/* Estilo para o feedback visual - TEMA AZUL */
 .task-card--em-andamento {
-  background-color: #062961 /*eef6ff;*/ /* Um azul muito claro, mas perceptível */
-  border-left-color: #3b82f6; /* Um azul vibrante e forte */
+  background-color: #eef6ff; /* Fundo azul BEM CLARO para contraste */
+  border-left-color: #3b82f6; /* Borda azul FORTE e vibrante */
+  border-width: 1px 1px 1px 5px; /* Garante que a borda esquerda fique mais grossa */
 }
-
 /* ================================== */
 /* ESTILOS PARA O INDICADOR DE CARGA  */
 /* ================================== */
-
 .loading-overlay {
   position: fixed; /* Cobre a tela inteira */
   top: 0;
@@ -390,6 +388,28 @@ export default TaskForm;*/
   justify-content: center;
   align-items: center;
   z-index: 2000; /* Garante que fique sobre todos os outros elementos */
+}
+
+/* Os seletores foram movidos para fora e prefixados com o pai */
+.loading-overlay .toast-confirm-btn, 
+.loading-overlay .toast-cancel-btn {
+  padding: 5px 10px;
+  margin: 5px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.loading-overlay .toast-confirm-btn { 
+  background-color: #dc3545; 
+  color: white; 
+  border-color: #dc3545; 
+}
+
+.loading-overlay .toast-cancel-btn { 
+  background-color: #f1f1f1; 
+}
+
   
   .toast-confirm-btn, .toast-cancel-btn {
   padding: 5px 10px;
