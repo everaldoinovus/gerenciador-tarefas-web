@@ -371,7 +371,7 @@ export default TaskForm;
 
 /* Estilo para o feedback visual - TEMA AZUL */
 .task-card--em-andamento {
-  background-color: #eef6ff; /* Um azul muito claro, mas perceptível */
+  background-color: #062961 /*eef6ff;*/ /* Um azul muito claro, mas perceptível */
   border-left-color: #3b82f6; /* Um azul vibrante e forte */
 }
 
