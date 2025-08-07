@@ -369,9 +369,10 @@ export default TaskForm;
   box-shadow: 0 4px 8px rgba(0,0,0,0.1);
 }
 
+/* Estilo para o feedback visual - TEMA AZUL */
 .task-card--em-andamento {
-  background-color: #fffbeb; /* Amarelo bem claro (cor de fundo) */
-  border-left-color: #f59e0b; /* Laranja/âmbar (cor da borda) */
+  background-color: #eef6ff; /* Um azul muito claro, mas perceptível */
+  border-left-color: #3b82f6; /* Um azul vibrante e forte */
 }
 
 /* ================================== */
