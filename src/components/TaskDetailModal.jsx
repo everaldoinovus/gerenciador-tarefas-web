@@ -81,7 +81,7 @@ function TaskDetailModal({ isOpen, onRequestClose, task, sectors, statuses, onUp
                     </div>
                     <h3>Anotações</h3>
                     <textarea name="notas" value={editableTask.notas || ''} onChange={handleChange} className="modal-notes-textarea"></textarea>
-                    <div className="modal-actions"><button onClick={handleSaveChanges} className="save-btn" disabled={isSaving}>{isSaving ? 'Salvando...' : 'Salvar Alterações'}</button><button onClick={handleCancelEdit} className="cancel-btn" disabled={isSaving}>Cancelar</button></div>
+                    <div className="modal-actions"><button onClick={handleSaveChanges} className="btn btn-success" disabled={isSaving}>{isSaving ? 'Salvando...' : 'Salvar Alterações'}</button><button onClick={handleCancelEdit} className="cancel-btn" disabled={isSaving}>Cancelar</button></div>
                 </div>
             ) : (
                 <div className="task-modal-view-mode">
