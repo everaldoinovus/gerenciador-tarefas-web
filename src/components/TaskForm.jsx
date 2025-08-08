@@ -50,7 +50,8 @@ function TaskForm({ onSubmit, members = [] }) {
         <input type="date" id="dataPrevista" value={dataPrevista} onChange={(e) => setDataPrevista(e.target.value)} required />
       </div>
       
-      <button type="submit">Adicionar Tarefa</button>
+      //<button type="submit">Adicionar Tarefa</button>
+	  <button type="submit" className="btn btn-success">Adicionar Tarefa</button>
     </form>
   );
 }
