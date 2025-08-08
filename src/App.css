@@ -369,11 +369,11 @@ export default TaskForm;*/
   box-shadow: 0 4px 8px rgba(0,0,0,0.1);
 }
 
-.task-card--em-andamento {
-  background-color: #eef6ff; /* Fundo azul BEM CLARO para contraste */
-  border-left-color: #3b82f6; /* Borda azul FORTE e vibrante */
-  border-width: 1px 1px 1px 5px; /* Garante que a borda esquerda fique mais grossa */
-}
+/*.task-card--em-andamento {*/
+/*  background-color: #eef6ff;*/
+/*  border-left-color: #3b82f6;*/
+/*  border-width: 1px 1px 1px 5px;*/
+/*}*/
 /* ================================== */
 /* ESTILOS PARA O INDICADOR DE CARGA  */
 /* ================================== */

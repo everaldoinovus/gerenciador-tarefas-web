@@ -81,7 +81,7 @@ function TaskDetailModal({ isOpen, onRequestClose, task, sectors, statuses, onUp
                     </div>
                     <h3>Anotações</h3>
                     <textarea name="notas" value={editableTask.notas || ''} onChange={handleChange} className="modal-notes-textarea"></textarea>
-                    <div className="modal-actions"><button onClick={handleSaveChanges} className="btn btn-success" disabled={isSaving}>{isSaving ? 'Salvando...' : 'Salvar Alterações'}</button><button onClick={handleCancelEdit} className="cancel-btn" disabled={isSaving}>Cancelar</button></div>
+                    <div className="modal-actions"><button onClick={handleSaveChanges} className="btn btn-success" disabled={isSaving}>{isSaving ? 'Salvando...' : 'Salvar Alterações'}</button><button onClick={handleCancelEdit} className="btn btn-secondary" disabled={isSaving}>Cancelar</button></div>
                 </div>
             ) : (
                 <div className="task-modal-view-mode">
@@ -115,9 +115,9 @@ function TaskDetailModal({ isOpen, onRequestClose, task, sectors, statuses, onUp
                         })}</ul>
                     </div>
                     <div className="modal-actions">
-                        <button onClick={() => setIsEditing(true)} className="edit-btn">Editar</button>
+                        <button onClick={() => setIsEditing(true)} className="btn btn-primary"">Editar</button>
                         <button onClick={handleDelete} className="btn btn-danger">Deletar Tarefa</button>
-                        <button onClick={onRequestClose} className="close-btn">Fechar</button>
+                        <button onClick={onRequestClose} className="btn btn-secondary">Fechar</button>
                     </div>
                 </div>
             )}
