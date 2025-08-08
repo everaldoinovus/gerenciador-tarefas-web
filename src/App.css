@@ -840,3 +840,367 @@ export default TaskForm;*/
     stroke-dashoffset: -124;
   }
 } 
+
+
+/* =================================================================== */
+/* ARQUIVO App.css REATORADO - V2.0                                    */
+/* FOCO EM MANUTENIBILIDADE, CONSISTÊNCIA E BOAS PRÁTICAS            */
+/* =================================================================== */
+
+/* ------------------------------------------------------------------- */
+/* 1. VARIÁVEIS GLOBAIS DE DESIGN (PALETA DE CORES)
+/* Para mudar uma cor em todo o site, basta editar aqui.
+/* ------------------------------------------------------------------- */
+:root {
+  /* Cores Principais */
+  --cor-primaria: #007bff;
+  --cor-primaria-hover: #0056b3;
+  --cor-secundaria: #6c757d;
+  --cor-secundaria-hover: #5a6268;
+
+  /* Cores Semânticas */
+  --cor-sucesso: #28a745;
+  --cor-sucesso-hover: #218838;
+  --cor-perigo: #dc3545;
+  --cor-perigo-hover: #c82333;
+  --cor-info: #17a2b8;
+  --cor-info-hover: #138496;
+
+  /* Cores de Fundo e Texto */
+  --cor-fundo-pagina: #f0f2f5;
+  --cor-fundo-componente: #f1f1f1;
+  --cor-fundo-bloco: #f8f9fa;
+  --cor-branco: #ffffff;
+  --cor-texto-principal: #343a40;
+  --cor-texto-secundario: #4b5563;
+
+  /* Cores de Borda e Divisórias */
+  --cor-borda: #ccc;
+  --cor-borda-sutil: #eee;
+  --cor-borda-bloco: #dee2e6;
+  
+  /* Cores de Feedback Específico */
+  --cor-andamento-fundo: #eef6ff;
+  --cor-andamento-borda: #3b82f6;
+  --cor-indicador-fundo: #f3f4f6;
+}
+
+/* ------------------------------------------------------------------- */
+/* 2. ESTILOS DE BOTÃO GENÉRICOS (PRINCÍPIO DRY)
+/* ------------------------------------------------------------------- */
+.btn {
+  display: inline-block;
+  padding: 10px 20px;
+  border: 1px solid transparent;
+  border-radius: 5px;
+  font-size: 1rem;
+  font-weight: bold;
+  text-align: center;
+  text-decoration: none;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+}
+
+.btn-primary { background-color: var(--cor-primaria); color: var(--cor-branco); }
+.btn-primary:hover { background-color: var(--cor-primaria-hover); }
+
+.btn-danger { background-color: var(--cor-perigo); color: var(--cor-branco); }
+.btn-danger:hover { background-color: var(--cor-perigo-hover); }
+
+.btn-success { background-color: var(--cor-sucesso); color: var(--cor-branco); }
+.btn-success:hover { background-color: var(--cor-sucesso-hover); }
+
+.btn-secondary { background-color: var(--cor-secundaria); color: var(--cor-branco); }
+.btn-secondary:hover { background-color: var(--cor-secundaria-hover); }
+
+.btn-info { background-color: var(--cor-info); color: var(--cor-branco); }
+.btn-info:hover { background-color: var(--cor-info-hover); }
+
+
+/* ------------------------------------------------------------------- */
+/* 3. LAYOUT PRINCIPAL E PÁGINAS DE AUTENTICAÇÃO
+/* ------------------------------------------------------------------- */
+.auth-page {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background-color: var(--cor-fundo-pagina);
+}
+
+.auth-form-container {
+  padding: 40px;
+  background-color: var(--cor-branco);
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  width: 100%;
+  max-width: 400px;
+}
+.auth-form-container h2 {
+  text-align: center;
+  margin: 0 0 30px 0;
+  color: var(--cor-texto-principal);
+}
+
+.main-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+.main-header h1 {
+  margin: 0;
+}
+
+.header-controls {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+/* ------------------------------------------------------------------- */
+/* 4. COMPONENTES DO KANBAN (QUADRO, COLUNAS, CARDS)
+/* ------------------------------------------------------------------- */
+.kanban-board {
+  display: flex;
+  gap: 20px;
+  margin-top: 20px;
+  padding: 10px;
+  overflow-x: auto;
+}
+
+.kanban-column {
+  flex: 1;
+  min-width: 300px;
+  background-color: var(--cor-fundo-componente);
+  border-radius: 8px;
+  padding: 15px;
+}
+.kanban-column h3 {
+  text-align: center;
+  margin-top: 0;
+  padding-bottom: 10px;
+  border-bottom: 2px solid var(--cor-borda);
+}
+
+.task-card {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: var(--cor-branco);
+  border: 1px solid var(--cor-borda-sutil);
+  border-left: 5px solid transparent; /* Base para o feedback visual */
+  padding: 15px;
+  margin-top: 10px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+  transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.3s ease;
+}
+.task-card.clickable {
+  cursor: pointer;
+}
+.task-card.clickable:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+/* Feedback visual de "Em Andamento" */
+.task-card--em-andamento {
+  background-color: var(--cor-andamento-fundo);
+  border-left-color: var(--cor-andamento-borda);
+}
+
+/* ------------------------------------------------------------------- */
+/* 5. CONTROLES E FILTROS
+/* ------------------------------------------------------------------- */
+.view-switcher, .main-controls, .task-filter {
+  margin: 20px 0;
+}
+.task-filter {
+  background-color: var(--cor-fundo-componente);
+  padding: 15px;
+  border-radius: 8px;
+}
+.filter-controls {
+  display: flex;
+  gap: 15px;
+}
+.filter-controls input {
+  padding: 8px;
+  border: 1px solid var(--cor-borda);
+  border-radius: 4px;
+}
+
+.view-switcher button {
+  padding: 10px 15px;
+  border: 1px solid var(--cor-borda);
+  background-color: var(--cor-branco);
+  cursor: pointer;
+}
+.view-switcher button.active {
+  background-color: var(--cor-primaria);
+  color: var(--cor-branco);
+  border-color: var(--cor-primaria);
+}
+.view-switcher button:first-child { border-radius: 5px 0 0 5px; }
+.view-switcher button:last-child { border-radius: 0 5px 5px 0; }
+
+/* ------------------------------------------------------------------- */
+/* 6. SETORES (GRUPOS, LISTAS, FORMULÁRIOS)
+/* ------------------------------------------------------------------- */
+.sector-group {
+  margin-top: 40px;
+  padding: 20px;
+  background-color: var(--cor-fundo-bloco);
+  border-radius: 8px;
+  border: 1px solid var(--cor-borda-bloco);
+}
+.sectors-container > .sector-group:first-child {
+  margin-top: 20px;
+}
+.sector-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 15px; 
+  padding-bottom: 15px;
+  border-bottom: 2px solid var(--cor-primaria);
+  margin-bottom: 15px;
+}
+.sector-header h2 {
+  font-size: 1.5rem;
+  margin: 0;
+  padding: 0;
+  border: none;
+  color: var(--cor-texto-principal);
+}
+
+.sector-form, .invite-form, .add-status-form {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+.sector-form input, .invite-form input, .add-status-form input {
+  flex-grow: 1;
+  padding: 8px;
+  border: 1px solid var(--cor-borda);
+  border-radius: 4px;
+}
+
+/* ------------------------------------------------------------------- */
+/* 7. MODAIS (TAREFA, CONFIGURAÇÕES, MEMBROS)
+/* ------------------------------------------------------------------- */
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 25px;
+  border-top: 1px solid var(--cor-borda-sutil);
+  padding-top: 20px;
+}
+
+.settings-modal-content, .settings-modal-header {
+  padding: 20px;
+}
+.settings-modal-header {
+  background-color: var(--cor-fundo-componente);
+  border-bottom: 1px solid var(--cor-borda-sutil);
+}
+.settings-modal-header h2 { margin: 0 0 15px 0; }
+
+.tabs button {
+  padding: 10px 15px;
+  border: none;
+  background-color: transparent;
+  cursor: pointer;
+  font-size: 1rem;
+  margin-right: 10px;
+  border-bottom: 3px solid transparent;
+}
+.tabs button.active {
+  border-bottom-color: var(--cor-primaria);
+  font-weight: bold;
+}
+
+/* ------------------------------------------------------------------- */
+/* 8. COMPONENTES ESPECÍFICOS E UTILITÁRIOS
+/* ------------------------------------------------------------------- */
+
+/* Indicador de "Em Análise" */
+.status-indicator {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 12px;
+  padding: 8px;
+  background-color: var(--cor-indicador-fundo);
+  border-radius: 4px;
+  font-size: 0.8rem;
+  color: var(--cor-texto-secundario);
+}
+.spinner-icon {
+  animation: rotate 2s linear infinite;
+  width: 16px;
+  height: 16px;
+}
+.spinner-icon .path {
+  stroke: var(--cor-texto-secundario);
+  stroke-linecap: round;
+  animation: dash 1.5s ease-in-out infinite;
+}
+
+/* Loading Overlay */
+.loading-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(255, 255, 255, 0.7);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 2000;
+}
+
+/* Notificação de Convite */
+.invitations-bell-container {
+  position: relative;
+  margin-left: 20px;
+}
+.bell-button {
+  background: none;
+  border: none;
+  font-size: 1.8rem;
+  cursor: pointer;
+  position: relative;
+}
+.invitation-count {
+  position: absolute;
+  top: -5px;
+  right: -5px;
+  background-color: var(--cor-perigo);
+  color: var(--cor-branco);
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  font-size: 0.8rem;
+  font-weight: bold;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* ------------------------------------------------------------------- */
+/* 9. ANIMAÇÕES
+/* ------------------------------------------------------------------- */
+@keyframes rotate {
+  100% {
+    transform: rotate(360deg);
+  }
+}
+@keyframes dash {
+  0% { stroke-dasharray: 1, 150; stroke-dashoffset: 0; }
+  50% { stroke-dasharray: 90, 150; stroke-dashoffset: -35; }
+  100% { stroke-dasharray: 90, 150; stroke-dashoffset: -124; }
+}
