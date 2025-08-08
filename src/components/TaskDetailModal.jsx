@@ -116,7 +116,7 @@ function TaskDetailModal({ isOpen, onRequestClose, task, sectors, statuses, onUp
                     </div>
                     <div className="modal-actions">
                         <button onClick={() => setIsEditing(true)} className="edit-btn">Editar</button>
-                        <button onClick={handleDelete} className="delete-btn-modal">Deletar Tarefa</button>
+                        <button onClick={handleDelete} className="btn btn-danger">Deletar Tarefa</button>
                         <button onClick={onRequestClose} className="close-btn">Fechar</button>
                     </div>
                 </div>
