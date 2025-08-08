@@ -590,7 +590,7 @@ export default TaskForm;*/
   align-items: center;
   gap: 15px;
 }
-.settings-btn {
+/*.settings-btn {
   background: none;
   border: none;
   font-size: 1.5rem;
@@ -598,10 +598,10 @@ export default TaskForm;*/
   padding: 0 5px;
   opacity: 0.6;
   transition: opacity 0.2s;
-}
-.settings-btn:hover {
+}*/
+/*.settings-btn:hover {
   opacity: 1;
-}
+}*/
 
 /* ================================== */
 /* ESTILOS PARA NOTIFICAÇÃO DE CONVITE*/
@@ -1190,7 +1190,21 @@ export default TaskForm;*/
   justify-content: center;
   align-items: center;
 }
+/* Botão de ícone (usado para engrenagem de configurações, etc.) */
+.settings-btn {
+  background: none;
+  border: none;
+  font-size: 1.5rem; /* Ajuste o tamanho do ícone conforme necessário */
+  cursor: pointer;
+  padding: 0 5px;
+  color: var(--cor-texto-secundario); /* Use uma variável para a cor! */
+  opacity: 0.6;
+  transition: opacity 0.2s ease-in-out;
+}
 
+.settings-btn:hover {
+  opacity: 1;
+}
 /* ------------------------------------------------------------------- */
 /* 9. ANIMAÇÕES
 /* ------------------------------------------------------------------- */
