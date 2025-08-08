@@ -96,8 +96,8 @@ function DashboardPage() {
     return (
         <div className="container">
             {isLoading && (<div className="loading-overlay"><ClipLoader color={"#007bff"} size={80} /></div>)}
-            <header className="main-header"><h1>Meu Gerenciador de Tarefas</h1><div className="header-controls">{userInfo?.funcaoGlobal === 'master' && ( <Link to="/automations" className="nav-link">Automações</Link> )}<InvitationsBell onAcceptInvitation={handleAcceptInvitation} /><button onClick={logout} className="logout-btn">Sair</button></div></header>
-            <div className="main-controls">{(userInfo?.funcaoGlobal === 'master') && ( <button onClick={() => setIsSectorModalOpen(true)} className="manage-sectors-btn"> Gerenciar Setores </button> )}</div>
+            <header className="main-header"><h1>Meu Gerenciador de Tarefas</h1><div className="header-controls">{userInfo?.funcaoGlobal === 'master' && ( <Link to="/automations" className="nav-link">Automações</Link> )}<InvitationsBell onAcceptInvitation={handleAcceptInvitation} /><button onClick={logout} className="btn btn-secondary">Sair</button></div></header>
+            <div className="main-controls">{(userInfo?.funcaoGlobal === 'master') && ( <button onClick={() => setIsSectorModalOpen(true)} className="btn btn-info"> Gerenciar Setores </button> )}</div>
             <TaskFilter onFilterChange={handleFilterChange} />
             <div className="view-switcher"><button onClick={() => setViewMode('list')} className={viewMode === 'list' ? 'active' : ''}>Lista</button><button onClick={() => setViewMode('board')} className={viewMode === 'board' ? 'active' : ''}>Quadro</button></div>
             <div className="sectors-container">{[...sectors].sort((a, b) => a.nome.localeCompare(b.nome)).map(sector => {
@@ -106,7 +106,7 @@ function DashboardPage() {
                 const showSettings = sector.funcao === 'dono' || userInfo?.funcaoGlobal === 'master';
                 return (
                     <section key={sector.id} className="sector-group">
-                        <div className="sector-header"><div className="sector-title-controls"><button onClick={() => openTaskModal(sector)} className="add-task-btn">+Tarefa</button><h2>Setor: {sector.nome}</h2></div>{showSettings && (<button onClick={() => openSettingsModal(sector)} className="settings-btn" title="Configurações do setor">⚙️</button>)}</div>
+                        <div className="sector-header"><div className="sector-title-controls"><button onClick={() => openTaskModal(sector)} className="btn btn-success">+Tarefa</button><h2>Setor: {sector.nome}</h2></div>{showSettings && (<button onClick={() => openSettingsModal(sector)} className="settings-btn" title="Configurações do setor">⚙️</button>)}</div>
                         {viewMode === 'list' ? ( <div className="task-list">...</div> ) : ( <BoardView tasks={tasksForThisSector} statuses={sectorStatuses} onCardClick={openDetailModal} onUpdateStatus={handleUpdateTaskStatus} /> )}
                     </section>
                 );
