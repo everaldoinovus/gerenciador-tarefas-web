@@ -52,7 +52,7 @@ function AutomationPage() {
                                 </div>
                             )
                         })}
-                        <button type="button" onClick={addAcao} className="add-action-btn">+ Adicionar outra ação</button>
+                        <button type="button" onClick={addAcao} className="btn btn-primary">+ Adicionar outra ação</button>
                     </div>
                     <button type="submit" className="auth-button">Criar Regra</button>
                 </form>
