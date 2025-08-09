@@ -888,17 +888,21 @@ export default TaskForm;*/
 /* ------------------------------------------------------------------- */
 /* 2. ESTILOS DE BOTÃO GENÉRICOS (PRINCÍPIO DRY)
 /* ------------------------------------------------------------------- */
+
+
 .btn {
   display: inline-block;
+  width: 100%;                  
   padding: 10px 20px;
   border: 1px solid transparent;
   border-radius: 5px;
   font-size: 1rem;
   font-weight: bold;
   text-align: center;
-  text-decoration: none;
   cursor: pointer;
   transition: all 0.2s ease-in-out;
+  text-decoration: none;        
+  box-sizing: border-box;       
 }
 
 .btn-primary { background-color: var(--cor-primaria); color: var(--cor-branco); }
