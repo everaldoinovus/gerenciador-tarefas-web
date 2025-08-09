@@ -35,7 +35,7 @@ function RegisterPage() {
             <label htmlFor="senha">Senha</label>
             <input type="password" id="senha" value={senha} onChange={(e) => setSenha(e.target.value)} required disabled={loading} />
           </div>
-          <button type="submit" className="auth-button" disabled={loading}>
+          <button type="submit" className="btn btn-primary" disabled={loading}>
             {loading ? <ClipLoader color={"#ffffff"} size={20} /> : 'Registrar'}
           </button>
         </form>

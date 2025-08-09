@@ -1,6 +1,7 @@
 // Arquivo: gerenciador-tarefas-web/src/pages/DashboardPage.jsx - VERSÃO FINAL COM SCROLL
+// Arquivo: gerenciador-tarefas-web/src/pages/DashboardPage.jsx - VERSÃO FINAL COMPLETA
 
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { Link } from 'react-router-dom';
 import { ClipLoader } from 'react-spinners';
 import { toast } from 'react-toastify';
@@ -39,8 +40,10 @@ function DashboardPage() {
     const [selectedSectorForNewTask, setSelectedSectorForNewTask] = useState(null);
     const [sectorForSettings, setSectorForSettings] = useState(null);
 
-    // Ref para os elementos dos setores para a rolagem
+    // Refs para o Scroll Spy
     const sectorRefs = useRef({});
+    const mainContentRef = useRef(null);
+    const scrollTimeout = useRef(null);
 
     // Funções de busca de dados
     const fetchTasks = async () => { setIsLoading(true); try { const response = await api.get('/tarefas', { params: filters }); setTasks(response.data); return response.data; } catch (error) { console.error("Erro ao buscar tarefas:", error); if (error.response?.status !== 401) toast.error("Falha ao carregar tarefas."); } finally { setIsLoading(false); } };
@@ -83,7 +86,7 @@ function DashboardPage() {
     const handleAddTask = async (taskData) => { try { await api.post('/tarefas', taskData); toast.success("Tarefa adicionada com sucesso!"); refreshAllData(); } catch (error) { toast.error(error.response?.data?.error || "Erro ao adicionar tarefa."); } };
     const handleUpdateTask = async (taskId, updatedData) => { try { await api.put(`/tarefas/${taskId}`, updatedData); if (!updatedData.status_id) { toast.success("Tarefa atualizada com sucesso!"); } const newTasks = await fetchTasks(); const newlyFetchedTask = newTasks.find(t => t.id === taskId); if (newlyFetchedTask) { setSelectedTask(newlyFetchedTask); } } catch (error) { toast.error(error.response?.data?.error || "Erro ao atualizar tarefa."); return Promise.reject(error); } };
     const handleUpdateTaskStatus = (taskId, updateData) => { const taskToUpdate = tasks.find(task => task.id === taskId); if (taskToUpdate) { const updatedTask = { ...taskToUpdate, ...updateData }; if (updateData.status_id) { const newStatus = statuses[taskToUpdate.setor_id]?.find(s => s.id === updateData.status_id); if (newStatus) { updatedTask.status_nome = newStatus.nome; } } setTasks(tasks.map(t => t.id === taskId ? updatedTask : t)); api.put(`/tarefas/${taskId}`, updateData).then(() => { fetchTasks(); }).catch(err => { toast.error("Falha ao atualizar status."); fetchTasks(); }); } };
-    const handleDeleteTask = async (taskId) => { try { await api.delete(`/tarefas/${taskId}`); toast.success("Tarefa deletada com sucesso!"); refreshAllData(); } catch (error) { toast.error(error.response?.data?.error || "Erro ao deletar tarefa."); } };
+    const handleDeleteTask = async (taskId) => { try { await api.delete(`/tarefas/${taskId}`); toast.success("Tarefa deletada com sucesso!"); refreshAllData(); setIsDetailModalOpen(false); } catch (error) { toast.error(error.response?.data?.error || "Erro ao deletar tarefa."); } };
     const handleAcceptInvitation = () => refreshAllData();
     const handleFilterChange = (filterName, value) => setFilters(prevFilters => ({ ...prevFilters, [filterName]: value }));
     const openTaskModal = (sector) => { setSelectedSectorForNewTask(sector); setIsTaskModalOpen(true); };
@@ -102,6 +105,37 @@ function DashboardPage() {
             targetRef.scrollIntoView({ behavior: 'smooth', block: 'start' });
         }
     };
+
+    const handleScroll = useCallback(() => {
+        if (scrollTimeout.current) clearTimeout(scrollTimeout.current);
+        scrollTimeout.current = setTimeout(() => {
+            let bestMatch = { id: null, top: Number.MAX_VALUE };
+            const threshold = mainContentRef.current.offsetTop + 150; 
+            sectors.forEach(sector => {
+                const element = sectorRefs.current[sector.id];
+                if (element) {
+                    const rect = element.getBoundingClientRect();
+                    if (rect.top >= 0 && rect.top <= threshold) {
+                        if (rect.top < bestMatch.top) {
+                            bestMatch = { id: sector.id, top: rect.top };
+                        }
+                    }
+                }
+            });
+            if (bestMatch.id && bestMatch.id !== activeSectorId) {
+                setActiveSectorId(bestMatch.id);
+            }
+        }, 150);
+    }, [sectors, activeSectorId]);
+
+    useEffect(() => {
+        const mainEl = mainContentRef.current;
+        if (mainEl) mainEl.addEventListener('scroll', handleScroll);
+        return () => {
+            if (mainEl) mainEl.removeEventListener('scroll', handleScroll);
+            if (scrollTimeout.current) clearTimeout(scrollTimeout.current);
+        };
+    }, [handleScroll]);
 
     return (
         <div className="dashboard-layout">
@@ -134,7 +168,7 @@ function DashboardPage() {
                 </div>
             </aside>
 
-            <main className="dashboard-main-content">
+            <main ref={mainContentRef} className="dashboard-main-content">
                 <header className="main-content-header">
                     <h1>Dashboard de Tarefas</h1>
                     <div className="view-controls">
@@ -161,11 +195,11 @@ function DashboardPage() {
                                 >
                                     <div className="sector-header-scroll">
                                         <div className="sector-title-area">
-											<button onClick={() => openTaskModal(sector)} className="btn btn-success">+ Nova Tarefa</button>
-											<div className="title-wrapper">
-												<h2>{sector.nome}</h2>
-											</div>
-										</div>
+                                            <button onClick={() => openTaskModal(sector)} className="btn btn-success">+ Nova Tarefa</button>
+                                            <div className="title-wrapper">
+                                                <h2>{sector.nome}</h2>
+                                            </div>
+                                        </div>
                                         {showSettings && (<button onClick={() => openSettingsModal(sector)} className="settings-btn" title="Configurações do setor">⚙️</button>)}
                                     </div>
                                     
