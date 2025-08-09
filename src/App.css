@@ -61,18 +61,18 @@ function TaskForm() {
 
 export default TaskForm;*/
 
-
+/*
 .task-card {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background: #ffffff; /* Fundo branco para destacar no quadro */
+  background: #ffffff; 
   border: 1px solid #eee;
   padding: 15px;
   margin-top: 10px;
   border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.05); /* Uma leve sombra */
-}
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05); 
+}*/
 
 .delete-button {
   padding: 5px 10px;
@@ -359,7 +359,7 @@ export default TaskForm;*/
 .cancel-btn, .close-btn { background-color: #6c757d; }
 .delete-btn-modal { background-color: #dc3545; }
 
-      
+  /*    
 .task-card.clickable {
   cursor: pointer;
   transition: transform 0.2s ease, box-shadow 0.2s ease;
@@ -367,7 +367,7 @@ export default TaskForm;*/
 .task-card.clickable:hover {
   transform: translateY(-2px);
   box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-}
+}*/
 
 /*.task-card--em-andamento {*/
 /*  background-color: #eef6ff;*/
