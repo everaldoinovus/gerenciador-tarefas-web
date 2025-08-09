@@ -1,78 +1,34 @@
-/*// Arquivo: src/components/TaskForm.jsx
+/* =================================================================== */
+/* SUPORTE AUTOMÁTICO PARA TEMA ESCURO (DARK MODE)                     */
+/* =================================================================== */
 
-import { useState } from 'react';
+@media (prefers-color-scheme: dark) {
+  :root {
+    /* As variáveis são as mesmas, mas os valores mudam para o modo escuro. */
 
-function TaskForm() {
-  // Cria estados para cada campo do formulário
-  const [descricao, setDescricao] = useState('');
-  const [responsavel, setResponsavel] = useState('');
-  const [dataPrevista, setDataPrevista] = useState('');
+    /* Cores de Fundo e Texto Invertidas */
+    --cor-fundo-pagina: #121212;         /* Um preto não tão forte */
+    --cor-fundo-componente: #1e1e1e;     /* Cinza escuro para colunas, filtros */
+    --cor-fundo-bloco: #242424;          /* Um pouco mais claro para cards de setor */
+    --cor-branco: #181818;               /* O fundo dos cards agora é escuro */
+    --cor-texto-principal: #e4e4e7;      /* Texto principal quase branco */
+    --cor-texto-secundario: #a1a1aa;     /* Texto secundário em cinza claro */
 
-  const handleSubmit = (event) => {
-    // Impede o comportamento padrão do formulário (que é recarregar a página)
-    event.preventDefault();
+    /* Cores de Borda Invertidas */
+    --cor-borda: #404040;
+    --cor-borda-sutil: #333333;
+    --cor-borda-bloco: #3a3a3a;
     
-    console.log({
-      descricao: descricao,
-      responsavel: responsavel,
-      data_prevista_conclusao: dataPrevista,
-    });
+    /* Cores de Feedback Específico Ajustadas para o Escuro */
+    --cor-andamento-fundo: rgba(59, 130, 246, 0.15); /* Fundo do azul, mas com transparência */
+    --cor-andamento-borda: #3b82f6;                  /* A borda azul pode permanecer a mesma */
+    --cor-indicador-fundo: #3a3a3a;                  /* Fundo do indicador de loading */
 
-    // Futuramente, aqui faremos a chamada para a API
-  };
-
-  return (
-    <form onSubmit={handleSubmit} className="task-form">
-      <h2>Adicionar Nova Tarefa</h2>
-      <div>
-        <label htmlFor="descricao">Descrição:</label>
-        <input
-          type="text"
-          id="descricao"
-          value={descricao}
-          onChange={(e) => setDescricao(e.target.value)}
-          required
-        />
-      </div>
-      <div>
-        <label htmlFor="responsavel">Responsável:</label>
-        <input
-          type="text"
-          id="responsavel"
-          value={responsavel}
-          onChange={(e) => setResponsavel(e.target.value)}
-          required
-        />
-      </div>
-      <div>
-        <label htmlFor="dataPrevista">Data Prevista de Conclusão:</label>
-        <input
-          type="date"
-          id="dataPrevista"
-          value={dataPrevista}
-          onChange={(e) => setDataPrevista(e.target.value)}
-          required
-        />
-      </div>
-      <button type="submit">Adicionar Tarefa</button>
-    </form>
-  );
+    /* As cores primárias, de sucesso, etc., geralmente funcionam bem
+       em fundos escuros, então não precisamos alterá-las, a menos que
+       o contraste seja um problema. */
+  }
 }
-
-export default TaskForm;*/
-
-/*
-.task-card {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  background: #ffffff; 
-  border: 1px solid #eee;
-  padding: 15px;
-  margin-top: 10px;
-  border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.05); 
-}*/
 
 .delete-button {
   padding: 5px 10px;
@@ -1221,4 +1177,29 @@ export default TaskForm;*/
   0% { stroke-dasharray: 1, 150; stroke-dashoffset: 0; }
   50% { stroke-dasharray: 90, 150; stroke-dashoffset: -35; }
   100% { stroke-dasharray: 90, 150; stroke-dashoffset: -124; }
+}
+
+
+/* =================================================================== */
+/* GARANTINDO QUE FORMULÁRIOS ADEREM AO TEMA (LIGHT/DARK)              */
+/* =================================================================== */
+
+input,
+select,
+textarea {
+  background-color: var(--cor-branco); /* Usará branco no modo claro, e escuro no modo escuro */
+  color: var(--cor-texto-principal);     /* Usará texto escuro no modo claro, e claro no modo escuro */
+  border: 1px solid var(--cor-borda);
+}
+
+/* Estilo para o estado de 'focus' em modo escuro */
+@media (prefers-color-scheme: dark) {
+  input:focus,
+  select:focus,
+  textarea:focus {
+    outline: none;
+    border-color: var(--cor-primaria);
+    /* Sombra de foco ajustada para o modo escuro */
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.25);
+  }
 }
