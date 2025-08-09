@@ -1,0 +1,180 @@
+/* Arquivo: src/pages/DashboardPage.css */
+
+/* --- Layout Principal com Sidebar --- */
+.dashboard-layout {
+  display: grid;
+  grid-template-columns: 260px 1fr; /* Largura da sidebar e o resto para o conteúdo */
+  height: 100vh;
+  background-color: var(--cor-fundo-bloco);
+}
+
+/* --- Estilos da Sidebar --- */
+.dashboard-sidebar {
+  background-color: var(--cor-branco);
+  border-right: 1px solid var(--cor-borda-bloco);
+  display: flex;
+  flex-direction: column;
+  padding: 1.5rem;
+}
+
+.sidebar-header h2 {
+  font-size: 1.5rem;
+  margin: 0 0 1.5rem 0;
+  color: var(--cor-texto-principal);
+}
+
+.sector-nav-list {
+  flex-grow: 1; /* Faz a lista ocupar o espaço disponível */
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.sector-nav-item {
+  width: 100%;
+  text-align: left;
+  padding: 12px 15px;
+  border-radius: 6px;
+  border: none;
+  background-color: transparent;
+  font-size: 1rem;
+  font-weight: 500;
+  color: var(--cor-texto-secundario);
+  cursor: pointer;
+  transition: background-color 0.2s, color 0.2s;
+}
+
+.sector-nav-item:hover {
+  background-color: var(--cor-fundo-bloco);
+}
+
+.sector-nav-item.active {
+  background-color: var(--cor-primaria);
+  color: var(--cor-branco);
+  font-weight: bold;
+}
+
+.sidebar-footer {
+  margin-top: 1.5rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--cor-borda-bloco);
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+.sidebar-footer .btn {
+  width: 100%;
+}
+
+.user-controls {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+}
+.user-controls .btn {
+  flex-grow: 1; /* Faz o botão de sair crescer */
+}
+
+
+/* --- Estilos do Conteúdo Principal --- */
+.dashboard-main-content {
+  padding: 2rem;
+  overflow-y: auto; /* Permite rolagem apenas no conteúdo principal */
+}
+
+.main-content-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+.sector-title-area {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+}
+.sector-title-area h1 {
+  margin: 0;
+  font-size: 2.2rem;
+}
+.sector-actions {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.view-controls {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem;
+  background-color: var(--cor-branco);
+  border-radius: 8px;
+  margin-bottom: 1.5rem;
+  border: 1px solid var(--cor-borda-sutil);
+}
+
+.content-area {
+  padding-top: 1rem;
+}
+
+
+/* --- Estilos da Nova Task List View --- */
+.task-list-view table {
+  width: 100%;
+  border-collapse: collapse;
+  background-color: var(--cor-branco);
+  border-radius: 8px;
+  overflow: hidden; /* Garante que o border-radius aplique nas bordas da tabela */
+  box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+}
+
+.task-list-view th, .task-list-view td {
+  padding: 15px;
+  text-align: left;
+  border-bottom: 1px solid var(--cor-borda-sutil);
+}
+
+.task-list-view thead th {
+  background-color: var(--cor-fundo-bloco);
+  font-weight: 600;
+  color: var(--cor-texto-secundario);
+}
+
+.task-list-view tbody tr {
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.task-list-view tbody tr:hover {
+  background-color: var(--cor-andamento-fundo);
+}
+
+.task-list-view tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.status-tag {
+  padding: 4px 10px;
+  border-radius: 12px;
+  font-weight: 500;
+  font-size: 0.85rem;
+  background-color: var(--cor-fundo-componente);
+  color: var(--cor-texto-secundario);
+}
+
+.task-desc-cell {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.status-indicator-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  flex-shrink: 0; /* Impede que o ponto seja esmagado */
+  /* As cores específicas virão de um local dinâmico ou de classes pré-definidas se necessário */
+  background-color: var(--cor-secundaria); 
+}
