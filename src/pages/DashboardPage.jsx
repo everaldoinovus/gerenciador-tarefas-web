@@ -161,9 +161,9 @@ function DashboardPage() {
                                 >
                                     <div className="sector-header-scroll">
                                         <div className="sector-title-area">
-                                            <h2>{sector.nome}</h2>
-                                            <button onClick={() => openTaskModal(sector)} className="btn btn-success">+ Nova Tarefa</button>
-                                        </div>
+											<button onClick={() => openTaskModal(sector)} className="btn btn-success">+ Nova Tarefa</button>
+											<h2>{sector.nome}</h2>
+										</div>
                                         {showSettings && (<button onClick={() => openSettingsModal(sector)} className="settings-btn" title="Configurações do setor">⚙️</button>)}
                                     </div>
                                     
