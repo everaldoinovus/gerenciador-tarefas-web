@@ -1,5 +1,5 @@
 // Arquivo: gerenciador-tarefas-web/src/pages/DashboardPage.jsx
-// Arquivo: gerenciador-tarefas-web/src/pages/DashboardPage.jsx
+// Arquivo: gerenciador-tarefas-web/src/pages/DashboardPage.jsx - CORRIGIDO
 
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
@@ -8,7 +8,6 @@ import { toast } from 'react-toastify';
 import { useAuth } from '../context/AuthContext';
 import api from '../services/api';
 
-// Importe os componentes
 import SectorManager from '../components/SectorManager';
 import TaskModal from '../components/TaskModal';
 import TaskDetailModal from '../components/TaskDetailModal';
@@ -16,27 +15,21 @@ import SettingsModal from '../components/SettingsModal';
 import InvitationsBell from '../components/InvitationsBell';
 import TaskFilter from '../components/TaskFilter';
 import BoardView from '../components/BoardView';
-// Crie um novo componente para a visualização em lista
 import TaskListView from '../components/TaskListView'; 
 
-// Crie um novo arquivo CSS para esta página
 import './DashboardPage.css'; 
 
 function DashboardPage() {
     const { logout, userInfo } = useAuth();
     
-    // Estados existentes
     const [tasks, setTasks] = useState([]);
     const [sectors, setSectors] = useState([]);
     const [filters, setFilters] = useState({ responsavel: '', data: '' });
     const [viewMode, setViewMode] = useState('board');
     const [isLoading, setIsLoading] = useState(true);
     const [statuses, setStatuses] = useState({});
-
-    // NOVO ESTADO: para controlar qual setor está ativo
     const [activeSectorId, setActiveSectorId] = useState(null);
     
-    // Estados dos modais (sem alteração)
     const [isSectorModalOpen, setIsSectorModalOpen] = useState(false);
     const [isTaskModalOpen, setIsTaskModalOpen] = useState(false);
     const [isDetailModalOpen, setIsDetailModalOpen] = useState(false);
@@ -44,7 +37,6 @@ function DashboardPage() {
     const [selectedTask, setSelectedTask] = useState(null);
     const [sectorForSettings, setSectorForSettings] = useState(null);
 
-    // Funções de busca de dados (com uma pequena adição)
     const fetchTasks = async () => { setIsLoading(true); try { const response = await api.get('/tarefas', { params: filters }); setTasks(response.data); return response.data; } catch (error) { console.error("Erro ao buscar tarefas:", error); if (error.response?.status !== 401) toast.error("Falha ao carregar tarefas."); } finally { setIsLoading(false); } };
     const fetchSectorsAndStatuses = async () => {
         try {
@@ -53,7 +45,6 @@ function DashboardPage() {
             const sortedSectors = [...sectorsData].sort((a, b) => a.nome.localeCompare(b.nome));
             setSectors(sortedSectors);
 
-            // Define o primeiro setor como ativo na carga inicial
             if (sortedSectors.length > 0 && !activeSectorId) {
                 setActiveSectorId(sortedSectors[0].id);
             }
@@ -79,12 +70,11 @@ function DashboardPage() {
     }, []);
 
     useEffect(() => {
-        if (sectors.length > 0) { // Evita a busca na carga inicial
+        if (sectors.length > 0) {
             fetchTasks();
         }
     }, [filters]);
     
-    // Funções de manipulação (sem alteração na lógica, apenas no fluxo)
     const handleAddTask = async (taskData) => { try { await api.post('/tarefas', taskData); toast.success("Tarefa adicionada com sucesso!"); refreshAllData(); } catch (error) { toast.error(error.response?.data?.error || "Erro ao adicionar tarefa."); } };
     const handleUpdateTask = async (taskId, updatedData) => { try { await api.put(`/tarefas/${taskId}`, updatedData); if (!updatedData.status_id) { toast.success("Tarefa atualizada com sucesso!"); } const newTasks = await fetchTasks(); const newlyFetchedTask = newTasks.find(t => t.id === taskId); if (newlyFetchedTask) { setSelectedTask(newlyFetchedTask); } } catch (error) { toast.error(error.response?.data?.error || "Erro ao atualizar tarefa."); return Promise.reject(error); } };
     const handleUpdateTaskStatus = (taskId, updateData) => { /* ... sua função otimizada ... */ };
@@ -98,7 +88,6 @@ function DashboardPage() {
     const openSettingsModal = (sector) => { setSectorForSettings(sector); setIsSettingsModalOpen(true); };
     const closeSettingsModal = () => { setIsSettingsModalOpen(false); setSectorForSettings(null); };
 
-    // Lógica para obter os dados do setor ativo
     const activeSector = sectors.find(s => s.id === activeSectorId);
     const tasksForActiveSector = tasks.filter(task => task.setor_id === activeSectorId);
     const statusesForActiveSector = statuses[activeSectorId] || [];
@@ -108,7 +97,6 @@ function DashboardPage() {
         <div className="dashboard-layout">
             {isLoading && (<div className="loading-overlay"><ClipLoader color={"var(--cor-primaria)"} size={80} /></div>)}
 
-            {/* --- BARRA LATERAL DE NAVEGAÇÃO (SIDEBAR) --- */}
             <aside className="dashboard-sidebar">
                 <div className="sidebar-header">
                     <h2>Setores</h2>
@@ -137,7 +125,6 @@ function DashboardPage() {
                 </div>
             </aside>
 
-            {/* --- ÁREA DE CONTEÚDO PRINCIPAL --- */}
             <main className="dashboard-main-content">
                 <header className="main-content-header">
                     {activeSector ? (
@@ -155,7 +142,8 @@ function DashboardPage() {
                     )}
                     <div className="global-actions">
                         {userInfo?.funcaoGlobal === 'master' && (
-                            <Link to="/automations" className="nav-link">Automações</g-link>
+                            // ===== LINHA CORRIGIDA AQUI =====
+                            <Link to="/automations" className="nav-link">Automações</Link>
                         )}
                     </div>
                 </header>
@@ -188,7 +176,6 @@ function DashboardPage() {
                 </div>
             </main>
 
-            {/* --- MODAIS --- */}
             <SectorManager isOpen={isSectorModalOpen} onRequestClose={() => setIsSectorModalOpen(false)} onSectorsUpdate={refreshAllData} />
             <TaskModal isOpen={isTaskModalOpen} onRequestClose={closeTaskModal} onTaskAdd={handleAddTask} sector={activeSector} />
             <TaskDetailModal isOpen={isDetailModalOpen} onRequestClose={closeDetailModal} task={selectedTask} sectors={sectors} statuses={statuses} onUpdateTask={handleUpdateTask} onDeleteTask={handleDeleteTask} />
@@ -198,7 +185,6 @@ function DashboardPage() {
 }
 
 export default DashboardPage;
-
 
 /*
 import React, { useState, useEffect } from 'react';
