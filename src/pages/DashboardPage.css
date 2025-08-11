@@ -43,6 +43,10 @@
   color: var(--cor-texto-secundario);
   cursor: pointer;
   transition: background-color 0.2s, color 0.2s;
+  transform: translateZ(0);
+  -webkit-transform: translateZ(0);
+  will-change: transform;
+  outline: none;
 }
 
 .sector-nav-item:hover {
@@ -53,6 +57,8 @@
   background-color: var(--cor-primaria);
   color: var(--cor-branco);
   font-weight: bold;
+  box-shadow: none; 
+  outline: none;
 }
 
 .sidebar-footer {
