@@ -42,15 +42,22 @@
   color: var(--cor-texto-secundario);
   cursor: pointer;
   transition: background-color 0.2s, color 0.2s;
-  outline: none;
-  box-shadow: none;
-  border: 2px solid transparent; 
+  border: 2px solid transparent !important;
+  outline: none !important;
+  box-shadow: none !important;
   border-radius: 8px;
   transform: translateZ(0);
 }
 
-.sector-nav-item:hover {
-  background-color: var(--cor-fundo-bloco);
+.sector-nav-item::-ms-focus-rect {
+  display: none;
+}
+
+.sector-nav-item:focus,
+.sector-nav-item:active {
+  outline: none !important;
+  box-shadow: none !important;
+  border-color: transparent !important;
 }
 
 .sector-nav-item.active {
@@ -60,7 +67,7 @@
 }
 
 .sector-nav-item:focus-visible {
-  border-color: var(--cor-primaria);
+  border-color: var(--cor-primaria) !important;
 }
 
 
