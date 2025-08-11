@@ -269,4 +269,5 @@
   overflow: hidden;
   text-overflow: ellipsis;
   margin: 0; 
+  color: var(--cor-texto-principal);
 }
