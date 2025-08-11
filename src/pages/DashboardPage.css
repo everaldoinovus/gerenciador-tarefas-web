@@ -287,3 +287,40 @@
   margin: 0; 
   color: var(--cor-texto-principal);
 }
+
+
+/* --- Para Firefox --- */
+.kanban-board {
+  /* Define a cor do "polegar" e do "trilho", respectivamente */
+  scrollbar-color: var(--cor-borda) var(--cor-fundo-componente);
+  /* Pode ser 'auto' ou 'thin' */
+  scrollbar-width: thin;
+}
+
+/* --- Para Navegadores WebKit (Chrome, Edge, Safari) --- */
+
+/* Define a largura/altura geral da barra de rolagem */
+.kanban-board::-webkit-scrollbar {
+  height: 12px; /* Para scrollbars horizontais */
+  width: 12px;  /* Para scrollbars verticais */
+}
+
+/* O "trilho" - a parte fixa da barra de rolagem */
+.kanban-board::-webkit-scrollbar-track {
+  background: var(--cor-fundo-componente);
+  border-radius: 10px;
+}
+
+/* O "polegar" - a parte móvel que você arrasta */
+.kanban-board::-webkit-scrollbar-thumb {
+  background-color: var(--cor-borda);
+  border-radius: 10px;
+  
+  /* Cria um efeito de "padding" ao redor do polegar, muito elegante */
+  border: 3px solid var(--cor-fundo-componente); 
+}
+
+/* Efeito visual quando o mouse passa por cima do polegar */
+.kanban-board::-webkit-scrollbar-thumb:hover {
+  background-color: var(--cor-secundaria);
+}
