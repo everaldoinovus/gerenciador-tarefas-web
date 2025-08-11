@@ -725,7 +725,19 @@
 .add-status-form input { flex-grow: 1; padding: 8px; border: 1px solid #ccc; border-radius: 4px; }
 .add-status-form button { padding: 8px 15px; border: none; background-color: #28a745; color: white; border-radius: 4px; cursor: pointer; }
 .status-list { list-style: none; padding: 0; }
-.status-list-item { display: flex; align-items: center; padding: 10px; border: 1px solid #eee; background: white; margin-bottom: 5px; border-radius: 4px; }
+
+.status-list-item { 
+  display: flex; 
+  align-items: center; 
+  padding: 10px; 
+  border: 1px solid var(--cor-borda-sutil); 
+  background: var(--cor-branco);
+  color: var(--cor-texto-principal);
+  margin-bottom: 5px; 
+  border-radius: 4px; 
+}
+
+	
 .status-list-item.is-dragging { box-shadow: 0 4px 8px rgba(0,0,0,0.2); }
 .status-item { display: flex; justify-content: space-between; align-items: center; width: 100%; }
 .status-item input { font-size: 1rem; padding: 5px; border: 1px solid #007bff; border-radius: 4px; width: 70%; }
@@ -948,14 +960,16 @@
   justify-content: space-between;
   align-items: center;
   background: var(--cor-branco);
+  color: var(--cor-texto-principal); /* <<< ADICIONE ESTA LINHA */
   border: 1px solid var(--cor-borda-sutil);
-  border-left: 5px solid transparent; /* Base para o feedback visual */
+  border-left: 5px solid transparent;
   padding: 15px;
   margin-top: 10px;
   border-radius: 8px;
   box-shadow: 0 2px 4px rgba(0,0,0,0.05);
   transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.3s ease;
 }
+
 .task-card.clickable {
   cursor: pointer;
 }
@@ -1202,4 +1216,29 @@ textarea {
     /* Sombra de foco ajustada para o modo escuro */
     box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.25);
   }
+}
+
+/* O 'overlay' é o fundo escurecido atrás do modal */
+.ReactModal__Overlay {
+    background-color: rgba(18, 18, 18, 0.75) !important; /* !important para sobrescrever estilos da lib */
+}
+
+/* O conteúdo do modal em si */
+.ReactModal__Content {
+    background: var(--cor-fundo-componente) !important;
+    color: var(--cor-texto-principal) !important;
+    border: 1px solid var(--cor-borda-bloco) !important;
+}
+
+/* Garante que os títulos dentro dos modais usem a cor de texto principal */
+.task-modal-view-mode h2, .modal-title-input,
+.task-modal-view-mode h3, .task-modal-edit-mode h3,
+.settings-modal-header h2,
+.history-section h3 {
+    color: var(--cor-texto-principal);
+}
+
+/* Ajusta o fundo da área de notas para contrastar */
+.notes-display {
+    background-color: var(--cor-fundo-bloco);
 }
