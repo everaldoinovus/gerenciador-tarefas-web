@@ -23,6 +23,8 @@
     --cor-andamento-fundo: rgba(59, 130, 246, 0.15); /* Fundo do azul, mas com transparência */
     --cor-andamento-borda: #3b82f6;                  /* A borda azul pode permanecer a mesma */
     --cor-indicador-fundo: #3a3a3a;                  /* Fundo do indicador de loading */
+	
+	--cor-aviso-fundo: rgba(245, 158, 11, 0.15); /* Âmbar com transparência
 
     /* As cores primárias, de sucesso, etc., geralmente funcionam bem
        em fundos escuros, então não precisamos alterá-las, a menos que
@@ -851,6 +853,9 @@
   --cor-andamento-fundo: #eef6ff;
   --cor-andamento-borda: #3b82f6;
   --cor-indicador-fundo: #f3f4f6;
+  
+  --cor-aviso-fundo: #fffbeb; /* Âmbar/Laranja muito claro */
+  --cor-aviso: #f59e0b;      /* Âmbar/Laranja forte para a borda */
 }
 
 /* ------------------------------------------------------------------- */
@@ -1244,7 +1249,6 @@ textarea {
     background-color: var(--cor-fundo-bloco);
 }
 
-/* Adicione ao final do seu App.css */
 
 .status-list-header {
   display: flex;
@@ -1288,4 +1292,16 @@ textarea {
     text-align: center;
     border: 1px solid var(--cor-borda);
     border-radius: 4px;
+}
+
+/* Vermelho para SLA estourado (substitui a antiga .task-card--overdue) */
+.task-card--sla-overdue {
+  background-color: var(--cor-perigo-fundo) !important;
+  border-left-color: var(--cor-perigo) !important;
+}
+
+/* Laranja para Prazo de Conclusão estourado */
+.task-card--deadline-overdue {
+  background-color: var(--cor-aviso-fundo) !important;
+  border-left-color: var(--cor-aviso) !important;
 }
