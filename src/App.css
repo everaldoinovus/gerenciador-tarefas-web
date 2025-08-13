@@ -1243,3 +1243,49 @@ textarea {
 .notes-display {
     background-color: var(--cor-fundo-bloco);
 }
+
+/* Adicione ao final do seu App.css */
+
+.status-list-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.5rem;
+}
+.status-list-header .btn-success {
+    padding: 5px 12px;
+    font-size: 0.9rem;
+}
+
+.status-config-item {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    width: 100%;
+}
+
+.status-name-input {
+    flex-grow: 1;
+    padding: 8px;
+    border: 1px solid var(--cor-borda);
+    border-radius: 4px;
+}
+
+.sla-input-group {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.sla-input-group label {
+    font-size: 0.9rem;
+    color: var(--cor-texto-secundario);
+}
+
+.sla-input-group input {
+    width: 80px;
+    padding: 8px;
+    text-align: center;
+    border: 1px solid var(--cor-borda);
+    border-radius: 4px;
+}

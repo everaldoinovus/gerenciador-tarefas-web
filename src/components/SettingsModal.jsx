@@ -1,5 +1,185 @@
 // Arquivo: gerenciador-tarefas-web/src/components/SettingsModal.jsx
+import React, { useState, useEffect } from 'react';
+import Modal from 'react-modal';
+import { toast } from 'react-toastify';
+import api from '../services/api';
+import { DragDropContext, Droppable, Draggable } from '@hello-pangea/dnd';
 
+const customModalStyles = { content: { top: '50%', left: '50%', right: 'auto', bottom: 'auto', marginRight: '-50%', transform: 'translate(-50%, -50%)', width: '650px', border: '1px solid #ccc', borderRadius: '8px', padding: '0', overflow: 'hidden' }, overlay: { backgroundColor: 'rgba(0, 0, 0, 0.75)' } };
+Modal.setAppElement('#root');
+
+function SettingsModal({ isOpen, onRequestClose, sector, onSettingsChange }) {
+    const [activeTab, setActiveTab] = useState('members');
+    const [members, setMembers] = useState([]);
+    const [emailToInvite, setEmailToInvite] = useState('');
+    const [statuses, setStatuses] = useState([]);
+    const [newStatusName, setNewStatusName] = useState('');
+
+    // ===== NOVO ESTADO PARA RASTREAR MUDANÇAS NAS COLUNAS =====
+    const [statusChanges, setStatusChanges] = useState({});
+
+    const fetchMembers = async () => { if (!sector) return; try { const response = await api.get(`/setores/${sector.id}/membros`); setMembers(response.data); } catch (error) { toast.error("Não foi possível carregar os membros."); } };
+    const fetchStatuses = async () => { if (!sector) return; try { const response = await api.get(`/setores/${sector.id}/status`); setStatuses(response.data); setStatusChanges({}); } catch (error) { toast.error("Não foi possível carregar os status."); } };
+    
+    useEffect(() => {
+        if (isOpen && sector) {
+            // Reseta a aba para 'members' ao abrir, e busca os dados
+            setActiveTab('members');
+            fetchMembers();
+        } else {
+            // Limpa os estados ao fechar o modal
+            setMembers([]);
+            setStatuses([]);
+            setStatusChanges({});
+        }
+    }, [isOpen, sector]);
+
+    // Busca os dados da aba ativa
+    useEffect(() => {
+        if(isOpen && sector) {
+            if (activeTab === 'members') fetchMembers();
+            if (activeTab === 'statuses') fetchStatuses();
+        }
+    }, [activeTab]);
+
+
+    const handleInvite = async (e) => { e.preventDefault(); if (!emailToInvite.trim() || !sector) return; try { await api.post(`/setores/${sector.id}/convidar`, { email: emailToInvite }); toast.success(`Convite enviado para ${emailToInvite}!`); setEmailToInvite(''); } catch (error) { toast.error(error.response?.data?.error || "Falha ao enviar convite."); } };
+    const handleAddStatus = async (e) => { e.preventDefault(); if (!newStatusName.trim()) return; try { const response = await api.post(`/setores/${sector.id}/status`, { nome: newStatusName }); setStatuses([...statuses, response.data]); setNewStatusName(''); onSettingsChange(); toast.success("Coluna adicionada!"); } catch (error) { toast.error(error.response?.data?.error || "Erro ao adicionar coluna.") } };
+    const handleDeleteStatus = async (statusId) => { if (!window.confirm("Tem certeza? Mova todas as tarefas desta coluna antes de deletá-la.")) return; try { await api.delete(`/status/${statusId}`); setStatuses(statuses.filter(s => s.id !== statusId)); onSettingsChange(); toast.success("Coluna deletada!"); } catch (error) { toast.error(error.response?.data?.error || "Erro ao deletar coluna.") } };
+    
+    // ===== NOVA FUNÇÃO PARA LIDAR COM MUDANÇAS NOS INPUTS DAS COLUNAS =====
+    const handleStatusChange = (statusId, field, value) => {
+        // Atualiza a lista de status na UI
+        const updatedStatuses = statuses.map(s => 
+            s.id === statusId ? { ...s, [field]: value } : s
+        );
+        setStatuses(updatedStatuses);
+
+        // Registra a mudança para salvar depois
+        const currentChanges = statusChanges[statusId] || {};
+        setStatusChanges({
+            ...statusChanges,
+            [statusId]: { ...currentChanges, [field]: value }
+        });
+    };
+
+    // ===== NOVA FUNÇÃO PARA SALVAR AS ALTERAÇÕES DE NOME E TEMPO MÁXIMO =====
+    const handleSaveChanges = async () => {
+        const changedIds = Object.keys(statusChanges);
+        if (changedIds.length === 0) {
+            toast.info("Nenhuma alteração para salvar.");
+            return;
+        }
+
+        const promises = changedIds.map(id => {
+            const originalStatus = statuses.find(s => s.id === parseInt(id));
+            const changes = statusChanges[id];
+            const payload = {
+                nome: changes.nome || originalStatus.nome,
+                tempo_maximo_dias: changes.hasOwnProperty('tempo_maximo_dias') ? changes.tempo_maximo_dias : originalStatus.tempo_maximo_dias
+            };
+            return api.put(`/status/${id}/settings`, payload);
+        });
+
+        try {
+            await Promise.all(promises);
+            toast.success("Alterações salvas com sucesso!");
+            setStatusChanges({}); // Limpa as mudanças rastreadas
+            onSettingsChange(); // Atualiza o dashboard
+        } catch (error) {
+            toast.error("Falha ao salvar uma ou mais alterações.");
+        }
+    };
+    
+    const handleDragEnd = async (result) => {
+        if (!result.destination) return;
+        const items = Array.from(statuses);
+        const [reorderedItem] = items.splice(result.source.index, 1);
+        items.splice(result.destination.index, 0, reorderedItem);
+        setStatuses(items);
+        try {
+            await api.put(`/setores/${sector.id}/status/reorder`, { orderedStatuses: items });
+            onSettingsChange();
+            toast.success("Ordem das colunas salva!");
+        } catch (error) {
+            toast.error("Não foi possível salvar a nova ordem.");
+            fetchStatuses();
+        }
+    };
+
+    if (!sector) return null;
+
+    return (
+        <Modal isOpen={isOpen} onRequestClose={onRequestClose} style={customModalStyles} contentLabel="Configurações do Setor">
+            <div className="settings-modal-header"><h2>Configurações - {sector.nome}</h2><div className="tabs"><button onClick={() => setActiveTab('members')} className={activeTab === 'members' ? 'active' : ''}>Membros</button><button onClick={() => setActiveTab('statuses')} className={activeTab === 'statuses' ? 'active' : ''}>Colunas / Status</button></div></div>
+            <div className="settings-modal-content">
+                {activeTab === 'members' ? (
+                    <div className="members-tab">
+                        <div className="invite-section"><h4>Convidar Novo Membro</h4><form onSubmit={handleInvite} className="invite-form"><input type="email" value={emailToInvite} onChange={(e) => setEmailToInvite(e.target.value)} placeholder="E-mail do novo membro" required /><button type="submit">Convidar</button></form></div>
+                        <div className="members-list-section"><h4>Membros Atuais</h4><ul className="members-list">{members.map(member => (<li key={member.id}><span>{member.email}</span><span className="member-role">{member.funcao}</span></li>))}</ul></div>
+                    </div>
+                ) : (
+                    <div className="statuses-tab">
+                        <div className="add-status-section"><h4>Adicionar Nova Coluna</h4><form onSubmit={handleAddStatus} className="add-status-form"><input type="text" value={newStatusName} onChange={e => setNewStatusName(e.target.value)} placeholder="Nome da nova coluna" required /><button type="submit">Adicionar</button></form></div>
+                        <div className="status-list-section">
+                            <div className="status-list-header">
+                                <h4>Colunas Atuais (Arraste para reordenar)</h4>
+                                {/* O botão de salvar só aparece se houverem mudanças */}
+                                {Object.keys(statusChanges).length > 0 && (
+                                    <button onClick={handleSaveChanges} className="btn btn-success">Salvar Alterações</button>
+                                )}
+                            </div>
+                            <DragDropContext onDragEnd={handleDragEnd}>
+                                <Droppable droppableId="statuses">
+                                    {(provided) => (
+                                        <ul className="status-list" {...provided.droppableProps} ref={provided.innerRef}>
+                                            {statuses.map((status, index) => (
+                                                <Draggable key={status.id} draggableId={status.id.toString()} index={index}>
+                                                    {(provided, snapshot) => (
+                                                        <li ref={provided.innerRef} {...provided.draggableProps} className={`status-list-item ${snapshot.isDragging ? 'is-dragging' : ''}`}>
+                                                            <span {...provided.dragHandleProps} className="drag-handle">⠿</span>
+                                                            {/* ===== JSX DO ITEM DA LISTA ATUALIZADO ===== */}
+                                                            <div className="status-config-item">
+                                                                <input 
+                                                                    type="text" 
+                                                                    value={status.nome} 
+                                                                    onChange={(e) => handleStatusChange(status.id, 'nome', e.target.value)}
+                                                                    className="status-name-input"
+                                                                />
+                                                                <div className="sla-input-group">
+                                                                    <label>Tempo Máx. (dias):</label>
+                                                                    <input 
+                                                                        type="number" 
+                                                                        min="0"
+                                                                        placeholder="Nenhum"
+                                                                        value={status.tempo_maximo_dias || ''} 
+                                                                        onChange={(e) => handleStatusChange(status.id, 'tempo_maximo_dias', e.target.value)}
+                                                                    />
+                                                                </div>
+                                                                <button onClick={() => handleDeleteStatus(status.id)} className="action-btn" title="Deletar">🗑️</button>
+                                                            </div>
+                                                        </li>
+                                                    )}
+                                                </Draggable>
+                                            ))}
+                                            {provided.placeholder}
+                                        </ul>
+                                    )}
+                                </Droppable>
+                            </DragDropContext>
+                        </div>
+                    </div>
+                )}
+            </div>
+            <div className="settings-modal-footer"><button onClick={onRequestClose} className="btn btn-secondary">Fechar</button></div>
+        </Modal>
+    );
+}
+
+export default SettingsModal;
+
+
+/*
 import React, { useState, useEffect } from 'react';
 import Modal from 'react-modal';
 import { toast } from 'react-toastify';
@@ -117,4 +297,4 @@ function SettingsModal({ isOpen, onRequestClose, sector, onSettingsChange }) {
     );
 }
 
-export default SettingsModal;
+export default SettingsModal;*/
