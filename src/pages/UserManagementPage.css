@@ -1,0 +1,50 @@
+.user-management-page {
+    padding: 2rem;
+    background-color: var(--cor-fundo-pagina);
+    min-height: 100vh;
+}
+
+.header-actions {
+    display: flex;
+    gap: 1rem;
+}
+
+.content-card {
+    background-color: var(--cor-branco);
+    color: var(--cor-texto-principal);
+    padding: 2rem;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+}
+
+.loading-center {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 200px;
+}
+
+.user-management-page table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.user-management-page th, .user-management-page td {
+    padding: 15px;
+    text-align: left;
+    border-bottom: 1px solid var(--cor-borda-sutil);
+}
+
+.user-management-page thead th {
+    background-color: var(--cor-fundo-bloco);
+    font-weight: 600;
+    color: var(--cor-texto-secundario);
+}
+
+.table-select {
+    padding: 8px 12px;
+    border-radius: 6px;
+    border: 1px solid var(--cor-borda);
+    background-color: var(--cor-branco);
+    color: var(--cor-texto-principal);
+}
