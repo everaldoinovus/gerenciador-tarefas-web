@@ -324,3 +324,43 @@
 .kanban-board::-webkit-scrollbar-thumb:hover {
   background-color: var(--cor-secundaria);
 }
+
+.sidebar-footer .user-profile-button {
+  padding: 12px 15px;
+  border-top: 1px solid var(--cor-borda-bloco);
+  margin-top: 1rem;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: var(--cor-texto-secundario);
+  transition: background-color 0.2s;
+}
+.sidebar-footer .user-profile-button:hover {
+  background-color: var(--cor-fundo-bloco);
+}
+.sidebar-footer .user-profile-button span:first-child {
+  font-weight: bold;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.modal-content .user-info-section {
+  padding: 1rem;
+  background-color: var(--cor-fundo-bloco);
+  border-radius: 6px;
+  margin-bottom: 1.5rem;
+}
+
+.modal-content hr {
+  border: none;
+  border-top: 1px solid var(--cor-borda-sutil);
+  margin: 1.5rem 0;
+}
+
+.form-actions-right {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 1.5rem;
+}
