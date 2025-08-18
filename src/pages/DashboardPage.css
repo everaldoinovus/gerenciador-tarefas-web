@@ -79,6 +79,7 @@
   flex-direction: column;
   gap: 1rem;
 }
+
 .sidebar-footer .btn {
   width: 100%;
 }
@@ -326,6 +327,7 @@
 }
 
 .sidebar-footer .user-profile-button {
+  order: 98; /* Garante que ele fique acima dos controles finais */
   padding: 12px 15px;
   border-top: 1px solid var(--cor-borda-bloco);
   margin-top: 1rem;
@@ -335,7 +337,9 @@
   align-items: center;
   color: var(--cor-texto-secundario);
   transition: background-color 0.2s;
+  font-size: 0.9rem;
 }
+
 .sidebar-footer .user-profile-button:hover {
   background-color: var(--cor-fundo-bloco);
 }
@@ -344,6 +348,21 @@
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  max-width: 150px; /* Impede que emails longos quebrem o layout */
+}
+
+
+.sidebar-footer .user-controls {
+  order: 99; /* Garante que fique por último */
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  margin-top: 0.5rem;
+}
+
+.sidebar-footer .user-controls .btn {
+  flex-grow: 1; /* Faz o botão de sair crescer para preencher o espaço */
 }
 
 .modal-content .user-info-section {
