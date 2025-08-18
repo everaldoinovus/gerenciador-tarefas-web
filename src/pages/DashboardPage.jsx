@@ -168,11 +168,13 @@ function DashboardPage() {
                         <Link to="/automations" className="btn btn-secondary">Automações</Link>
                     )}
                     
-                    {/* ===== NOVO BOTÃO/LINK PARA ABRIR O PERFIL DO USUÁRIO ===== */}
-                    <div className="user-profile-button" onClick={() => setIsProfileModalOpen(true)} title="Meu Perfil e Configurações">
-                        <span>{userInfo?.email}</span>
-                        <span>⚙️</span>
-                    </div>
+                    <button 
+						className="btn btn-secondary user-profile-button" 
+						onClick={() => setIsProfileModalOpen(true)} 
+						title="Meu Perfil e Configurações"
+					>
+						Meu Perfil ⚙️
+					</button>
 
                     <div className="user-controls">
                         <InvitationsBell onAcceptInvitation={handleAcceptInvitation} />
