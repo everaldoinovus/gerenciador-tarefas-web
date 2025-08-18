@@ -1,5 +1,5 @@
 /* =================================================================== */
-/* ARQUIVO App.css - VERSÃO CONSOLIDADA E LIMPA                        */
+/* ARQUIVO App.css - VERSÃO FINAL CONSOLIDADA E COMPLETA               */
 /* =================================================================== */
 
 /* --- 1. VARIÁVEIS GLOBAIS DE DESIGN (TEMA CLARO) --- */
@@ -37,7 +37,7 @@
     --cor-fundo-pagina: #121212;
     --cor-fundo-componente: #1e1e1e;
     --cor-fundo-bloco: #242424;
-    --cor-branco: #181818;
+    --cor-branco: #2a2a2a; /* Fundo de cards e inputs um pouco mais claro que o componente */
     --cor-texto-principal: #e4e4e7;
     --cor-texto-secundario: #a1a1aa;
     --cor-borda: #404040;
@@ -65,15 +65,15 @@
   text-decoration: none;
   box-sizing: border-box;
 }
-.btn-primary { background-color: var(--cor-primaria); color: var(--cor-branco); }
+.btn-primary { background-color: var(--cor-primaria); color: #fff; }
 .btn-primary:hover { background-color: var(--cor-primaria-hover); }
-.btn-danger { background-color: var(--cor-perigo); color: var(--cor-branco); }
+.btn-danger { background-color: var(--cor-perigo); color: #fff; }
 .btn-danger:hover { background-color: var(--cor-perigo-hover); }
-.btn-success { background-color: var(--cor-sucesso); color: var(--cor-branco); }
+.btn-success { background-color: var(--cor-sucesso); color: #fff; }
 .btn-success:hover { background-color: var(--cor-sucesso-hover); }
-.btn-secondary { background-color: var(--cor-secundaria); color: var(--cor-branco); }
+.btn-secondary { background-color: var(--cor-secundaria); color: #fff; }
 .btn-secondary:hover { background-color: var(--cor-secundaria-hover); }
-.btn-info { background-color: var(--cor-info); color: var(--cor-branco); }
+.btn-info { background-color: var(--cor-info); color: #fff; }
 .btn-info:hover { background-color: var(--cor-info-hover); }
 
 /* --- 4. ESTILOS GLOBAIS DE FORMULÁRIO E MODAIS --- */
@@ -81,6 +81,8 @@ input, select, textarea {
   background-color: var(--cor-branco);
   color: var(--cor-texto-principal);
   border: 1px solid var(--cor-borda);
+  border-radius: 4px;
+  padding: 8px;
 }
 @media (prefers-color-scheme: dark) {
   input:focus, select:focus, textarea:focus {
@@ -89,18 +91,28 @@ input, select, textarea {
     box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.25);
   }
 }
-.ReactModal__Overlay { background-color: rgba(18, 18, 18, 0.75) !important; }
+.ReactModal__Overlay { background-color: rgba(18, 18, 18, 0.75) !important; z-index: 1000; }
 .ReactModal__Content {
     background: var(--cor-fundo-componente) !important;
     color: var(--cor-texto-principal) !important;
     border: 1px solid var(--cor-borda-bloco) !important;
 }
-.settings-modal-header { background-color: var(--cor-fundo-bloco); border-bottom: 1px solid var(--cor-borda-sutil); padding: 20px; }
-.settings-modal-header h2 { margin: 0; color: var(--cor-texto-principal); }
-.settings-modal-content { padding: 20px; }
-.settings-modal-footer { padding: 20px; border-top: 1px solid var(--cor-borda-sutil); text-align: right; }
 
-/* --- 5. COMPONENTES DO KANBAN --- */
+/* --- 5. ESTILOS ANTIGOS REINCORPORADOS PARA COMPATIBILIDADE --- */
+
+/* Estilos de Páginas de Autenticação */
+.auth-page { display: flex; justify-content: center; align-items: center; min-height: 100vh; background-color: var(--cor-fundo-pagina); }
+.auth-form-container { padding: 40px; background-color: var(--cor-branco); color: var(--cor-texto-principal); border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); width: 100%; max-width: 400px; }
+.auth-form-container h2 { text-align: center; margin: 0 0 30px 0; color: var(--cor-texto-principal); }
+.form-group { margin-bottom: 20px; }
+.form-group label { display: block; margin-bottom: 5px; font-weight: bold; }
+.form-group input { width: 100%; padding: 10px; }
+.auth-button { width: 100%; padding: 12px; border: none; border-radius: 4px; background-color: var(--cor-primaria); color: #fff; font-size: 1rem; font-weight: bold; cursor: pointer; transition: background-color 0.2s; }
+.auth-button:hover { background-color: var(--cor-primaria-hover); }
+.auth-switch-link { margin-top: 20px; text-align: center; }
+.auth-switch-link a { color: var(--cor-primaria); font-weight: bold; text-decoration: none; }
+
+/* Componentes do Kanban */
 .kanban-board { display: flex; gap: 20px; margin-top: 20px; padding: 10px; overflow-x: auto; }
 .kanban-column { flex: 1; min-width: 300px; background-color: var(--cor-fundo-componente); border-radius: 8px; padding: 15px; }
 .kanban-column h3 { text-align: center; margin-top: 0; padding-bottom: 10px; border-bottom: 2px solid var(--cor-borda); color: var(--cor-texto-principal); }
@@ -111,3 +123,48 @@ input, select, textarea {
 .task-card--sla-overdue { background-color: var(--cor-perigo-fundo) !important; border-left-color: var(--cor-perigo) !important; }
 .task-card--deadline-overdue { background-color: var(--cor-aviso-fundo) !important; border-left-color: var(--cor-aviso) !important; }
 
+/* Controles e Filtros */
+.view-switcher, .main-controls, .task-filter { margin: 20px 0; }
+.task-filter { background-color: var(--cor-fundo-componente); padding: 15px; border-radius: 8px; }
+.filter-controls { display: flex; gap: 15px; }
+.view-switcher button { padding: 10px 15px; border: 1px solid var(--cor-borda); background-color: var(--cor-branco); color: var(--cor-texto-principal); cursor: pointer; }
+.view-switcher button.active { background-color: var(--cor-primaria); color: #fff; border-color: var(--cor-primaria); }
+.view-switcher button:first-child { border-radius: 5px 0 0 5px; }
+.view-switcher button:last-child { border-radius: 0 5px 5px 0; }
+
+/* Estilos de Modais */
+.settings-modal-header { padding: 20px; background-color: var(--cor-fundo-bloco); border-bottom: 1px solid var(--cor-borda-sutil); }
+.settings-modal-header h2 { margin: 0; color: var(--cor-texto-principal); }
+.settings-modal-content { padding: 20px; }
+.settings-modal-footer { padding: 20px; border-top: 1px solid var(--cor-borda-sutil); text-align: right; }
+.modal-actions { display: flex; justify-content: flex-end; gap: 10px; margin-top: 25px; border-top: 1px solid var(--cor-borda-sutil); padding-top: 20px; }
+.tabs button { padding: 10px 15px; border: none; background-color: transparent; cursor: pointer; font-size: 1rem; margin-right: 10px; border-bottom: 3px solid transparent; color: var(--cor-texto-secundario); }
+.tabs button.active { border-bottom-color: var(--cor-primaria); font-weight: bold; color: var(--cor-texto-principal); }
+
+/* Componentes Específicos e Utilitários */
+.loading-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(255, 255, 255, 0.7); display: flex; justify-content: center; align-items: center; z-index: 2000; }
+.status-indicator { display: flex; align-items: center; gap: 8px; margin-top: 12px; padding: 8px; background-color: var(--cor-indicador-fundo); border-radius: 4px; font-size: 0.8rem; color: var(--cor-texto-secundario); }
+.spinner-icon { animation: rotate 2s linear infinite; width: 16px; height: 16px; }
+.spinner-icon .path { stroke: var(--cor-texto-secundario); stroke-linecap: round; animation: dash 1.5s ease-in-out infinite; }
+.settings-btn { background: none; border: none; font-size: 1.5rem; cursor: pointer; padding: 0 5px; color: var(--cor-texto-secundario); opacity: 0.6; transition: opacity 0.2s ease-in-out; }
+.settings-btn:hover { opacity: 1; }
+.drag-handle { margin-right: 10px; cursor: grab; color: var(--cor-borda); }
+.nav-link { font-weight: 500; color: var(--cor-texto-principal); text-decoration: none; padding: 8px 12px; border-radius: 5px; transition: background-color 0.2s; }
+.nav-link:hover { background-color: var(--cor-fundo-componente); }
+.status-list-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem; }
+.status-list-header .btn-success { padding: 5px 12px; font-size: 0.9rem; }
+.status-config-item { display: flex; align-items: center; gap: 15px; width: 100%; }
+.status-name-input { flex-grow: 1; }
+.sla-input-group { display: flex; align-items: center; gap: 8px; }
+.sla-input-group label { font-size: 0.9rem; color: var(--cor-texto-secundario); }
+.sla-input-group input { width: 80px; text-align: center; }
+.status-list-item { display: flex; align-items: center; padding: 10px; border: 1px solid var(--cor-borda-sutil); background: var(--cor-branco); color: var(--cor-texto-principal); margin-bottom: 5px; border-radius: 4px; }
+.status-list-item.is-dragging { box-shadow: 0 4px 8px rgba(0,0,0,0.2); }
+
+/* Notificações */
+.bell-button { background: none; border: none; font-size: 1.8rem; cursor: pointer; position: relative; }
+.invitation-count { position: absolute; top: -5px; right: -5px; background-color: var(--cor-perigo); color: #fff; border-radius: 50%; width: 20px; height: 20px; font-size: 0.8rem; font-weight: bold; display: flex; justify-content: center; align-items: center; }
+
+/* Animações */
+@keyframes rotate { 100% { transform: rotate(360deg); } }
+@keyframes dash { 0% { stroke-dasharray: 1, 150; stroke-dashoffset: 0; } 50% { stroke-dasharray: 90, 150; stroke-dashoffset: -35; } 100% { stroke-dasharray: 90, 150; stroke-dashoffset: -124; } }
