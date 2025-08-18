@@ -1,9 +1,28 @@
-import React, 'react';
+import React from 'react'; // << CORREÇÃO APLICADA AQUI
 import Modal from 'react-modal';
 import { useAuth } from '../context/AuthContext';
-import ChangePasswordForm from './ChangePasswordForm'; // Vamos criar este a seguir
+import ChangePasswordForm from './ChangePasswordForm';
 
-const customModalStyles = { /* Seus estilos de modal aqui */ };
+// Lembre-se de colocar seus estilos de modal aqui, ou defina-os via CSS.
+// Exemplo:
+const customModalStyles = { 
+    content: { 
+        top: '50%', 
+        left: '50%', 
+        right: 'auto', 
+        bottom: 'auto', 
+        marginRight: '-50%', 
+        transform: 'translate(-50%, -50%)', 
+        width: '500px', 
+        border: '1px solid var(--cor-borda-bloco)', 
+        borderRadius: '8px', 
+        padding: '0', 
+        overflow: 'hidden' 
+    }, 
+    overlay: { 
+        backgroundColor: 'rgba(18, 18, 18, 0.75)' 
+    } 
+};
 
 function UserProfileModal({ isOpen, onRequestClose }) {
     const { userInfo } = useAuth();
@@ -12,10 +31,10 @@ function UserProfileModal({ isOpen, onRequestClose }) {
 
     return (
         <Modal isOpen={isOpen} onRequestClose={onRequestClose} style={customModalStyles} contentLabel="Perfil do Usuário">
-            <div className="modal-header">
+            <div className="settings-modal-header">  {/* Reutilizando estilo do header de outro modal */}
                 <h2>Meu Perfil</h2>
             </div>
-            <div className="modal-content">
+            <div className="settings-modal-content"> {/* Reutilizando estilo do content de outro modal */}
                 <div className="user-info-section">
                     <strong>Email:</strong> {userInfo.email}
                     <br />
@@ -29,7 +48,7 @@ function UserProfileModal({ isOpen, onRequestClose }) {
                     <ChangePasswordForm onSuccess={onRequestClose} />
                 </div>
             </div>
-            <div className="modal-footer">
+            <div className="settings-modal-footer"> {/* Reutilizando estilo do footer de outro modal */}
                 <button className="btn btn-secondary" onClick={onRequestClose}>Fechar</button>
             </div>
         </Modal>
