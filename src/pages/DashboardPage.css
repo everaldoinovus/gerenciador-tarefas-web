@@ -1,9 +1,9 @@
-/* Arquivo: src/pages/DashboardPage.css */
+/* Arquivo: src/pages/DashboardPage.css - VERSÃO FINAL E CONSOLIDADA */
 
 /* --- Layout Principal com Sidebar --- */
 .dashboard-layout {
   display: grid;
-  grid-template-columns: 260px 1fr; /* Largura da sidebar e o resto para o conteúdo */
+  grid-template-columns: 260px 1fr;
   height: 100vh;
   background-color: var(--cor-fundo-bloco);
 }
@@ -15,6 +15,7 @@
   display: flex;
   flex-direction: column;
   padding: 1.5rem;
+  color: var(--cor-texto-principal); /* Garante que o texto dentro da sidebar tenha a cor correta */
 }
 
 .sidebar-header h2 {
@@ -24,13 +25,12 @@
 }
 
 .sector-nav-list {
-  flex-grow: 1; /* Faz a lista ocupar o espaço disponível */
+  flex-grow: 1;
   overflow-y: auto;
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
 }
-
 
 .sector-nav-item {
   width: 100%;
@@ -48,353 +48,26 @@
   border-radius: 8px;
   transform: translateZ(0);
 }
+.sector-nav-item::-ms-focus-rect { display: none; }
+.sector-nav-item:focus, .sector-nav-item:active { outline: none !important; box-shadow: none !important; border-color: transparent !important; }
+.sector-nav-item.active { background-color: var(--cor-primaria); color: var(--cor-branco); font-weight: bold; }
+.sector-nav-item:focus-visible { border-color: var(--cor-primaria) !important; }
 
-.sector-nav-item::-ms-focus-rect {
-  display: none;
-}
-
-.sector-nav-item:focus,
-.sector-nav-item:active {
-  outline: none !important;
-  box-shadow: none !important;
-  border-color: transparent !important;
-}
-
-.sector-nav-item.active {
-  background-color: var(--cor-primaria);
-  color: var(--cor-branco);
-  font-weight: bold;
-}
-
-.sector-nav-item:focus-visible {
-  border-color: var(--cor-primaria) !important;
-}
-
-
-.sidebar-footer {
-  margin-top: 1.5rem;
-  padding-top: 1.5rem;
-  border-top: 1px solid var(--cor-borda-bloco);
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-}
-
-.sidebar-footer .btn {
-  width: 100%;
-}
-
-.user-controls {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 1rem;
-}
-.user-controls .btn {
-  flex-grow: 1; /* Faz o botão de sair crescer */
-}
-
-
-/* --- Estilos do Conteúdo Principal --- */
-.dashboard-main-content {
-  padding: 2rem;
-  overflow-y: auto; /* Permite rolagem apenas no conteúdo principal */
-}
-
-.main-content-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 1.5rem;
-}
-.sector-title-area {
-  display: flex;
-  align-items: center;
-  gap: 1.5rem;
-}
-.sector-title-area h1 {
-  margin: 0;
-  font-size: 2.2rem;
-}
-.sector-actions {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-}
-
-.view-controls {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 1rem;
-  background-color: var(--cor-branco);
-  border-radius: 8px;
-  margin-bottom: 1.5rem;
-  border: 1px solid var(--cor-borda-sutil);
-}
-
-.content-area {
-  padding-top: 1rem;
-}
-
-
-/* --- Estilos da Nova Task List View --- */
-.task-list-view table {
-  width: 100%;
-  border-collapse: collapse;
-  background-color: var(--cor-branco);
-  border-radius: 8px;
-  overflow: hidden; /* Garante que o border-radius aplique nas bordas da tabela */
-  box-shadow: 0 2px 8px rgba(0,0,0,0.07);
-}
-
-.task-list-view th, .task-list-view td {
-  padding: 15px;
-  text-align: left;
-  border-bottom: 1px solid var(--cor-borda-sutil);
-}
-
-.task-list-view thead th {
-  background-color: var(--cor-fundo-bloco);
-  font-weight: 600;
-  color: var(--cor-texto-secundario);
-}
-
-.task-list-view tbody tr {
-  cursor: pointer;
-  transition: background-color 0.2s;
-}
-
-.task-list-view tbody tr:hover {
-  background-color: var(--cor-andamento-fundo);
-}
-
-.task-list-view tbody tr:last-child td {
-  border-bottom: none;
-}
-
-.status-tag {
-  padding: 4px 10px;
-  border-radius: 12px;
-  font-weight: 500;
-  font-size: 0.85rem;
-  background-color: var(--cor-fundo-componente);
-  color: var(--cor-texto-secundario);
-}
-
-.task-desc-cell {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-.status-indicator-dot {
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-  flex-shrink: 0; /* Impede que o ponto seja esmagado */
-  /* As cores específicas virão de um local dinâmico ou de classes pré-definidas se necessário */
-  background-color: var(--cor-secundaria); 
-}
-
-
-/* Adicione estas classes ao final de src/pages/DashboardPage.css */
-
-.sectors-container-scroll {
-  display: flex;
-  flex-direction: column;
-  gap: 2rem;
-}
-
-.sector-group-scroll {
-  background-color: var(--cor-branco);
-  padding: 1.5rem;
-  border-radius: 8px;
-  border: 1px solid var(--cor-borda-sutil);
-  /* A animação de scroll-margin-top garante que o header não cubra o título */
-  scroll-margin-top: 20px; 
-}
-
-.sector-header-scroll {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 1.5rem;
-  padding-bottom: 1.5rem;
-  border-bottom: 1px solid var(--cor-borda-sutil);
-}
-
-.sector-header-scroll h2 {
-    font-size: 1.8rem;
-    margin: 0;
-}
-
-/* Ajuste no header principal para ter um fundo e ficar fixo (opcional, mas recomendado) */
-.dashboard-main-content .main-content-header {
-    background: var(--cor-fundo-bloco);
-    padding: 1.5rem;
-    border-radius: 8px;
-    margin-bottom: 1.5rem;
-    /* Para um cabeçalho fixo, descomente as linhas abaixo */
-    /*
-    position: sticky;
-    top: 0;
-    z-index: 100;
-    */
-}
-.dashboard-main-content .main-content-header h1 {
-    font-size: 1.5rem;
-    margin-bottom: 1rem;
-}
-.dashboard-main-content .view-controls {
-    padding: 0;
-    background: none;
-    border: none;
-    margin-bottom: 0;
-}
-
-.sector-header-scroll {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 1rem; 
-}
-
-
-.sector-header-scroll .sector-title-area {
-  display: flex;
-  align-items: center;
-  flex-grow: 1; 
-  min-width: 0;   
-}
-
-
-.sector-header-scroll .btn-success {
-  flex-shrink: 0;
-  width: auto; 
-}
-
-
-.sector-header-scroll .title-wrapper {
-  flex-grow: 1; 
-  min-width: 0;   
-  margin-left: 1rem; 
-}
-
-
-.sector-header-scroll .title-wrapper h2 {
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  margin: 0; 
-  color: var(--cor-texto-principal);
-}
-
-
-/* --- Para Firefox --- */
-.kanban-board {
-  /* Define a cor do "polegar" e do "trilho", respectivamente */
-  scrollbar-color: var(--cor-borda) var(--cor-fundo-componente);
-  /* Pode ser 'auto' ou 'thin' */
-  scrollbar-width: thin;
-}
-
-/* --- Para Navegadores WebKit (Chrome, Edge, Safari) --- */
-
-/* Define a largura/altura geral da barra de rolagem */
-.kanban-board::-webkit-scrollbar {
-  height: 12px; /* Para scrollbars horizontais */
-  width: 12px;  /* Para scrollbars verticais */
-}
-
-/* O "trilho" - a parte fixa da barra de rolagem */
-.kanban-board::-webkit-scrollbar-track {
-  background: var(--cor-fundo-componente);
-  border-radius: 10px;
-}
-
-/* O "polegar" - a parte móvel que você arrasta */
-.kanban-board::-webkit-scrollbar-thumb {
-  background-color: var(--cor-borda);
-  border-radius: 10px;
-  
-  /* Cria um efeito de "padding" ao redor do polegar, muito elegante */
-  border: 3px solid var(--cor-fundo-componente); 
-}
-
-/* Efeito visual quando o mouse passa por cima do polegar */
-.kanban-board::-webkit-scrollbar-thumb:hover {
-  background-color: var(--cor-secundaria);
-}
-
-.sidebar-footer .user-profile-button {
-  order: 98; /* Garante que ele fique acima dos controles finais */
-  padding: 12px 15px;
-  border-top: 1px solid var(--cor-borda-bloco);
-  margin-top: 1rem;
-  cursor: pointer;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  color: var(--cor-texto-secundario);
-  transition: background-color 0.2s;
-  font-size: 0.9rem;
-}
-
-.sidebar-footer .user-profile-button:hover {
-  background-color: var(--cor-fundo-bloco);
-}
-.sidebar-footer .user-profile-button span:first-child {
-  font-weight: bold;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  max-width: 150px; /* Impede que emails longos quebrem o layout */
-}
-
-
-.sidebar-footer .user-controls {
-  order: 99; /* Garante que fique por último */
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 1rem;
-  margin-top: 0.5rem;
-}
-
-.sidebar-footer .user-controls .btn {
-  flex-grow: 1; /* Faz o botão de sair crescer para preencher o espaço */
-}
-
-.modal-content .user-info-section {
-  padding: 1rem;
-  background-color: var(--cor-fundo-bloco);
-  border-radius: 6px;
-  margin-bottom: 1.5rem;
-}
-
-.modal-content hr {
-  border: none;
-  border-top: 1px solid var(--cor-borda-sutil);
-  margin: 1.5rem 0;
-}
-
-.form-actions-right {
-  display: flex;
-  justify-content: flex-end;
-  margin-top: 1.5rem;
-}
-
-/* --- Estilos para o Rodapé da Sidebar --- */
+/* --- Estilos do Rodapé da Sidebar (CONSOLIDADO E CORRIGIDO) --- */
 .sidebar-footer {
   margin-top: auto; /* Empurra o rodapé para a parte inferior */
-  padding-top: 1.5rem;
+  padding-top: 1rem;
   border-top: 1px solid var(--cor-borda-bloco);
   display: flex;
   flex-direction: column;
   gap: 0.75rem;
 }
+.sidebar-footer .btn {
+    width: 100%; /* Garante que todos os botões/links ocupem a largura total */
+}
 
 .user-profile-button {
+  order: 1; /* Garante que o perfil venha antes dos controles */
   padding: 12px 15px;
   cursor: pointer;
   display: flex;
@@ -418,17 +91,80 @@
 }
 
 .user-controls {
+  order: 2; /* Garante que os controles fiquem por último */
   display: flex;
-  justify-content: space-between;
   align-items: center;
   gap: 1rem;
 }
-.user-controls .btn {
+.user-controls .btn-secondary {
   flex-grow: 1;
 }
 .bell-button {
   color: var(--cor-texto-secundario);
+  flex-shrink: 0;
 }
 .bell-button:hover {
   color: var(--cor-texto-principal);
 }
+
+/* --- Estilos do Conteúdo Principal --- */
+.dashboard-main-content {
+  padding: 2rem;
+  overflow-y: auto;
+}
+.dashboard-main-content .main-content-header {
+    background: var(--cor-fundo-bloco);
+    padding: 1.5rem;
+    border-radius: 8px;
+    margin-bottom: 1.5rem;
+}
+.dashboard-main-content .main-content-header h1 {
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+    color: var(--cor-texto-principal);
+}
+.dashboard-main-content .view-controls {
+    padding: 0;
+    background: none;
+    border: none;
+    margin-bottom: 0;
+}
+.view-controls {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.content-area {
+  padding-top: 1rem;
+}
+
+/* --- Estilos do Quadro Kanban e Lista de Tarefas --- */
+.task-list-view table { width: 100%; border-collapse: collapse; background-color: var(--cor-branco); border-radius: 8px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.07); }
+.task-list-view th, .task-list-view td { padding: 15px; text-align: left; border-bottom: 1px solid var(--cor-borda-sutil); }
+.task-list-view thead th { background-color: var(--cor-fundo-bloco); font-weight: 600; color: var(--cor-texto-secundario); }
+.task-list-view tbody tr { cursor: pointer; transition: background-color 0.2s; }
+.task-list-view tbody tr:hover { background-color: var(--cor-andamento-fundo); }
+.task-list-view tbody tr:last-child td { border-bottom: none; }
+.status-tag { padding: 4px 10px; border-radius: 12px; font-weight: 500; font-size: 0.85rem; background-color: var(--cor-fundo-componente); color: var(--cor-texto-secundario); }
+.task-desc-cell { display: flex; align-items: center; gap: 10px; }
+.status-indicator-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; background-color: var(--cor-secundaria); }
+.kanban-board { scrollbar-color: var(--cor-borda) var(--cor-fundo-componente); scrollbar-width: thin; }
+.kanban-board::-webkit-scrollbar { height: 12px; width: 12px; }
+.kanban-board::-webkit-scrollbar-track { background: var(--cor-fundo-componente); border-radius: 10px; }
+.kanban-board::-webkit-scrollbar-thumb { background-color: var(--cor-borda); border-radius: 10px; border: 3px solid var(--cor-fundo-componente); }
+.kanban-board::-webkit-scrollbar-thumb:hover { background-color: var(--cor-secundaria); }
+
+/* --- Estilos dos Setores na Área de Conteúdo --- */
+.sectors-container-scroll { display: flex; flex-direction: column; gap: 2rem; }
+.sector-group-scroll { background-color: var(--cor-branco); padding: 1.5rem; border-radius: 8px; border: 1px solid var(--cor-borda-sutil); scroll-margin-top: 20px; }
+.sector-header-scroll { display: flex; justify-content: space-between; align-items: center; gap: 1rem; margin-bottom: 1.5rem; padding-bottom: 1.5rem; border-bottom: 1px solid var(--cor-borda-sutil); }
+.sector-header-scroll .sector-title-area { display: flex; align-items: center; flex-grow: 1; min-width: 0; }
+.sector-header-scroll .btn-success { flex-shrink: 0; width: auto; }
+.sector-header-scroll .title-wrapper { flex-grow: 1; min-width: 0; margin-left: 1rem; }
+.sector-header-scroll .title-wrapper h2 { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin: 0; font-size: 1.8rem; color: var(--cor-texto-principal); }
+
+/* --- Estilos para Modais (apenas os específicos que não estão no App.css) --- */
+.modal-content .user-info-section { padding: 1rem; background-color: var(--cor-fundo-bloco); border-radius: 6px; margin-bottom: 1.5rem; }
+.modal-content hr { border: none; border-top: 1px solid var(--cor-borda-sutil); margin: 1.5rem 0; }
+.form-actions-right { display: flex; justify-content: flex-end; margin-top: 1.5rem; }
