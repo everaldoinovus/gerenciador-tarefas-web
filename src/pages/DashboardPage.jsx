@@ -169,7 +169,7 @@ function DashboardPage() {
                     )}
                     
                     <button 
-						className="btn btn-secondary user-profile-button" 
+						className="btn btn-info user-profile-button" 
 						onClick={() => setIsProfileModalOpen(true)} 
 						title="Meu Perfil e Configurações"
 					>
