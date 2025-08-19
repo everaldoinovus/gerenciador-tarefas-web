@@ -165,7 +165,7 @@ function DashboardPage() {
                         <button onClick={() => setIsSectorModalOpen(true)} className="btn btn-info">Gerenciar Setores</button>
                     )}
                     {userInfo?.role === 'admin' && (
-                        <Link to="/automations" className="btn btn-secondary">Automações</Link>
+                        <Link to="/automations" className="btn btn-info">Automações</Link>
                     )}
                     
                     <button 
