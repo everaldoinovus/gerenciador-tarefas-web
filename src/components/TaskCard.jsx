@@ -21,7 +21,6 @@ function TaskCard({ task, index, onCardClick, isDragDisabled = false }) {
   const CardInnerContent = () => (
     <div className="task-info">
       <strong>{task.descricao}</strong>
-      //<p>Responsável: {task.responsavel_email || 'Ninguém'}</p>
 	  <p>Responsável: {task.responsavel_nome || task.responsavel_email || 'Ninguém'}</p>
       <p>Data de Conclusão: {formatDate(task.data_prevista_conclusao)}</p>
 	   {task.status_vinculado === 'em_andamento' && (

@@ -33,8 +33,7 @@ function TaskListView({ tasks, onCardClick }) {
                                 </div>
                             </td>
                             <td><span className="status-tag">{task.status_nome}</span></td>
-                            //<td>{task.responsavel_email || 'Ninguém'}</td>
-							<td>{task.responsavel_nome || task.responsavel_email || 'Ninguém'}</td>
+                            <td>{task.responsavel_nome || task.responsavel_email || 'Ninguém'}</td>
                             <td>{formatDate(task.data_prevista_conclusao)}</td>
                         </tr>
                     ))}
