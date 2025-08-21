@@ -39,7 +39,8 @@ function TaskForm({ onSubmit, members = [] }) {
           <option value="">-- Ninguém --</option>
           {members.map(member => (
             <option key={member.id} value={member.id}>
-              {member.email}
+				{member.nome || member.email}
+              //{member.email}
             </option>
           ))}
         </select>

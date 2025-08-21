@@ -168,3 +168,33 @@ input, select, textarea {
 /* Animações */
 @keyframes rotate { 100% { transform: rotate(360deg); } }
 @keyframes dash { 0% { stroke-dasharray: 1, 150; stroke-dashoffset: 0; } 50% { stroke-dasharray: 90, 150; stroke-dashoffset: -35; } 100% { stroke-dasharray: 90, 150; stroke-dashoffset: -124; } }
+
+
+/* parte relacionada ao nome de usuário nas tarefas */
+.name-editor {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.name-display {
+  cursor: pointer;
+  padding: 5px;
+  border-radius: 4px;
+  transition: background-color 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.name-display:hover {
+  background-color: var(--cor-borda-sutil);
+}
+.name-input {
+  padding: 5px 8px;
+  font-size: 1rem;
+}
+.edit-icon {
+  opacity: 0.5;
+}
+.name-display:hover .edit-icon {
+  opacity: 1;
+}

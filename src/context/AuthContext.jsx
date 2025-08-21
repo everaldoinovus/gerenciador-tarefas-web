@@ -1,3 +1,125 @@
+// Arquivo: gerenciador-tarefas-web/src/context/AuthContext.jsx - VERSÃO COM fetchUserInfo
+
+import React, { createContext, useState, useEffect, useContext } from 'react';
+import api from '../services/api';
+import { toast } from 'react-toastify';
+import { jwtDecode } from 'jwt-decode';
+
+const AuthContext = createContext(null);
+
+export const AuthProvider = ({ children }) => {
+  const [token, setToken] = useState(localStorage.getItem('token'));
+  const [userInfo, setUserInfo] = useState(() => {
+    try {
+      const savedUserInfo = localStorage.getItem('userInfo');
+      return savedUserInfo ? JSON.parse(savedUserInfo) : null;
+    } catch (error) {
+      return null;
+    }
+  });
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    try {
+      if (token) {
+        api.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+        const decoded = jwtDecode(token);
+        if (decoded.exp * 1000 < Date.now()) {
+          logout();
+        }
+      } else {
+        delete api.defaults.headers.common['Authorization'];
+        if (userInfo) {
+            setUserInfo(null);
+            localStorage.removeItem('userInfo');
+        }
+      }
+    } catch (error) {
+      console.error("Token inválido encontrado, limpando sessão:", error);
+      logout();
+    }
+  }, [token]);
+
+  const login = async (email, senha) => {
+    setLoading(true);
+    try {
+      const response = await api.post('/auth/login', { email, senha });
+      const { token: newToken, userInfo: newUserInfo } = response.data;
+      localStorage.setItem('token', newToken);
+      localStorage.setItem('userInfo', JSON.stringify(newUserInfo));
+      setToken(newToken);
+      setUserInfo(newUserInfo);
+      toast.success('Login bem-sucedido!');
+    } catch (error) {
+      console.error('Erro de login:', error);
+      if (error.response?.data?.needsVerification) {
+        toast.warn('Sua conta não foi verificada. Por favor, verifique seu e-mail.');
+        throw { ...error, needsVerification: true }; 
+      }
+      toast.error(error.response?.data?.error || 'Falha no login. Verifique suas credenciais.');
+      throw error;
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const register = async (email, senha) => {
+    // Esta função pode ser removida se não for mais usada
+  };
+  
+  const logout = () => {
+    localStorage.removeItem('token');
+    localStorage.removeItem('userInfo');
+    setToken(null);
+    setUserInfo(null);
+    toast.info('Você saiu da sua conta.');
+  };
+  
+  // ===== NOVA FUNÇÃO PARA ATUALIZAR OS DADOS DO USUÁRIO LOGADO =====
+  const fetchUserInfo = async () => {
+      try {
+          const response = await api.get('/users/me');
+          const newUserInfo = response.data;
+          // Atualiza o localStorage e o estado com os dados mais recentes
+          localStorage.setItem('userInfo', JSON.stringify(newUserInfo));
+          setUserInfo(newUserInfo);
+      } catch (error) {
+          console.error("Falha ao buscar informações do usuário, fazendo logout.", error);
+          // Se não conseguir buscar os dados, a sessão pode estar inválida.
+          logout();
+      }
+  };
+
+  const value = {
+    token,
+    userInfo,
+    isLoggedIn: !!token && !!userInfo,
+    loading,
+    login,
+    register,
+    logout,
+    fetchUserInfo // << Expõe a nova função para os componentes
+  };
+
+  return (
+    <AuthContext.Provider value={value}>
+      {children}
+    </AuthContext.Provider>
+  );
+};
+
+export const useAuth = () => {
+  const context = useContext(AuthContext);
+  if (!context) {
+    throw new Error('useAuth deve ser usado dentro de um AuthProvider');
+  }
+  return context;
+};
+
+
+
+
+/*
 // Arquivo: gerenciador-tarefas-web/src/context/AuthContext.jsx - VERSÃO CORRIGIDA
 
 import React, { createContext, useState, useEffect, useContext } from 'react';
@@ -124,7 +246,7 @@ export const useAuth = () => {
   }
   return context;
 };
-
+*/
 
 /*
 // Arquivo: gerenciador-tarefas-web/src/context/AuthContext.jsx
